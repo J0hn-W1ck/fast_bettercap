@@ -1,295 +1,154 @@
 #!/bin/bash
-clear;
+
+#Fast_Bettercap es un script en bash que busca simplificar el uso del nuevo bettercap para aquellas personas que no saben como utiliala.
+#No busco robarme el credito de esta maravillosa herramienta llamada BETTERCAP, simplemente fasilitar su uso.
+#Esta es la version 0.2 y estoy rediseñando las funciones y menu de seleccion para hacerlo mas completo.
+#No soy un programador, ni me considero un hacker, solo soy un entusiasta de informatica.
+#Por si quieren contactarme: hablemosdehacking@gmail.com
+#Hacepto sugerencias y criticas.
+#John-Wick
+
+
+
+
 
 BANNER() {
-			echo;
-			echo -e "\e[0;32m [[[[[[[[[[[[[[[[[[[[[[[[[[[[[*]]]]]]]]]]]]]]]]]]]]]]]]]]\e[0m"
-			echo -e "\e[0;32m [[[[[[[[[[[[[[\e[0;31mFAST_BETTERCAP \e[0;32m|\e[0;31m Version 0.1\e[0;32m]]]]]]]]]]]]]]\e[0m"
-			echo -e "\e[0;32m [[[[[[[[[[[[[[[[[[[[[[[[[[[[[*]]]]]]]]]]]]]]]]]]]]]]]]]]\e[0m"
-			echo -e "\e[0;32m [[[[[[[[[[[[[[[[[[[[[[[[[[[[[|]]]]]]]]]]]]]]]]]]]]]]]]]]\e[0m"
-			echo -e "\e[0;32m [[[[[[[[[[[[[[[[[[[[[[\e[0;31mBY: JOHN-WICK\e[0;32m]]]]]]]]]]]]]]]]]]]]]\e[0m"
-			echo -e "\e[0;32m [[[[[[[[[[[[[[[[[[[[[[[[[[[[[*]]]]]]]]]]]]]]]]]]]]]]]]]]\e[0m"
+	clear;echo;
+echo -e '\e[1;33m   -::-.`                                                   `...`     \e[0m'
+echo -e '\e[1;33m  .shhhhhhyo/-`           \e[1;37mFast Bettercap V0.2\e[1;33m          .:+syhhhhhs.  \e[0m'
+echo -e '\e[1;33m `yhhhhhhhhhhhys+-`         \e[1;37m By:> John-Wick\e[1;33m        .:+syhhhhhhhhhhhs;\e[0m'
+echo -e '\e[1;33m :hhhhhhhhhhhhhhhhhyo/-.                     `.:+oyhhhhhhhhhdhhhhhhh- \e[0m'
+echo -e '\e[1;33m +hhhhhh\e[1;37mMMMMNN\e[1;33mmdhhhhhhhhyso+/:--.......-:/+oyyhhhhhhhhdm\e[1;37mNMMMMM\e[1;33mmhhhhh/ \e[0m'
+echo -e '\e[1;33m /hhhhhhd\e[1;37mNMMMMMMMN\e[1;33mmdhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhm\e[1;37mNMMMMMMMMN\e[1;33mhhhhhh/ \e[0m'
+echo -e '\e[1;33m -hhhhhhhhhdm\e[1;37mNMMMMMMMN\e[1;33mdhhhhhhhhhhhhhhhhhhhhhhhhdm\e[1;37mMMMMMMMNN\e[1;33mmdhhhhhhhh- \e[0m'
+echo -e '\e[1;33m  shhhhhhhhhhhhhhhdddd\e[1;37mmm\e[1;33mdhhhhhhhhhhhhhhhhhhhhh\e[1;37mmmm\e[1;33mdddhhhhhhhhhhhhhhhs  \e[0m'
+echo -e '\e[1;33m  `yhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhy`  \e[0m'
+echo -e '\e[1;33m   `oyhhhhhhhhhhhhhhhhhhhhhhhyyyyssssyyyyhhhhhhhhhhhhhhhhhhhhhhhyo`   \e[0m'
+echo -e '\e[1;33m     .:+ooooo++++///::--...``            ``...--:://+++oooooo+/:.     \e[0m'
+echo -e '\e[1;33m                                ``.```  \e[0m';echo;
 
-		 }
-
-			ERROR() {
-						echo;
-						echo -e "\e[0;31m[[[[[[[[ERROR, LA OPCION INGRESADA NO CORESPONDE  A NINGUNA]]]]]]]\e[0m"; sleep 02 ; clear ; MENU_PRINCIPAL
-					}
-
-		   ERROR1() {
-						echo;
-						echo -e "\e[0;31m[[[[[[[[ERROR, LA OPCION INGRESADA NO CORESPONDE  A NINGUNA]]]]]]]\e[0m"; sleep 02 ; clear ; SNIFF
-					}
+}
 
 
-SALIR() {
-			reset; exit 0
-	}
-
-BAN_TARGETS () {
-				while true; do
-						echo; echo -e "\e[0;31m Menu principal, opcion \e[0;37m5 \e[0;32m|\e[0;37m Ban target/s.\e[0m"
-						echo; echo -n -e "\e[0;32m [[[*]]] \e[0;31mQue target/s desea banear: "; tput sgr0
-						echo -e "\e[0;32m [[[*]]] \e[0;37m Paramas de un solo target, separarlos por "," | ejemplo: 192.1.2.3,192.4.5.6\e[0m"
-						read TARGET
-							if [ -z "$TARGET" ]; then
-									echo -e "\e[0;31m [[[[OPCION VACIA, VUELVA A INTENTARLO]]]]"; echo; BAN_TARGETS;
-								else
-									bettercap -eval "set arp.spoof.targets 192.168.1.101; arp.spoof on; arp.ban on; net.probe on" 1> /dev/null &
-									
-							fi
-				done	
-	}
-	
-	#dnspoof #AUN NO TERMINO ESTA PARTE DEL SCRIPT , TENGO QUE MEJORAR ESTA OPCION DE DNS SPOOF.. 
-							DNSSPOOF() { if [ -d ~/bettercap ]; then
-													while true; do
-															echo; echo -e "\e[0;31m Menu principal, opcion \e[0;37m3 \e[0;32m|\e[0;37m Dns spoof.\e[0m"
-															echo; echo -n -e "\e[0;32m [[[*]]] \e[0;31mQue dominio desea suplantar: "; tput sgr0
-															read DOMINIO
-															if [ -z "$DOMINIO" ]; then
-																		echo -e "\e[0;31m [[[[OPCION VACIA, VUELVA A INTENTARLO]]]]"; echo; DNSSPOOF;
-
-																else
-																	while true; do
-																		echo -n -e "\e[0;32m [[[*]]] \e[0;31mDesea guarda los paquetes capturados en un archivo (si/no): "; tput sgr0
-																		read SINO
-																			if [ -z "$SINO" ]; then
-																						echo -e "\e[0;31m [[[[OPCION VACIA, VUELVA A INTENTARLO]]]]"; echo; DNSSPOOF;
-																				else
-																						case $SINO in
-																							[si]* ) sudo xfce4-terminal --geometry=193x40 -x bettercap -eval "set dns.spoof.domains $DOMINIO; set dns.spoof.address; set dns.spoof.all true; set net.sniff.output /root/bettercap/$DOMINIO.pcap; set net.sniff.verbose false; dns.spoof on; net.sniff on; arp.spoof on" && MENU_PRINCIPAL;
-																							;;
-																							[no]* ) sudo xfce4-terminal --geometry=193x40 -x bettercap -eval "set dns.spoof.domains $DOMINIO; set dns.spoof.address; set dns.spoof.all true; set net.sniff.verbose false; dns.spoof on; net.sniff on; arp.spoof on" && MENU_PRINCIPAL;
-																							;;
-																								* ) echo -e "\e[0;31m[[[[POR FAVOR SOLO PONGA (s|n)]]]]"; DNSSPOOF;
-																							;;
-																						esac
-																			fi
-																	done
-															fi
-													done
-											else
-											mkdir ~/bettercap 2> /dev/null ; DNSSPOOF;
-										fi
-									}
-							
+HOST_UP() {
+	sleep 0.5 ;echo;
+	gnome-terminal -t sniff_all --geometry=170x35 --zoom=0.7 -- bettercap -eval "net.probe on; ticker on " && clear; MENU_PRINCIPAL;
+}
 
 
-	HTTP_PROXY() { if [ -d ~/bettercap ]; then
-
-							while true; do
-									echo; echo -e "\e[0;31m Menu principal, opcion \e[0;37m2 \e[0;32m|\e[0;37m Proxy htttp tranparente.\e[0m"
-									echo; echo -n -e "\e[0;32m [[[*]]] \e[0;31mUtilizar sslstrip.? (si|no): "; tput sgr0
-									read SSLSTRIP
-									if [ -z $SSLSTRIP ]; then
-											echo -e "\e[0;31m [[[[OPCION VACIA, VUELVA A INTENTARLO]]]]"; echo; SSLSTRIP;
-										else
-												case $SSLSTRIP in
-														[si]* ) while true; do
-																		echo -n -e "\e[0;32m [[[*]]] \e[0;31mDesea guarda los paquetes capturados en un archivo (si/no): "; tput sgr0
-																		read SINO 
-																		if [ -z "$SINO" ]; then
-																				echo -e "\e[0;31m [[[[OPCION VACIA, VUELVA A INTENTARLO]]]]"; echo; SSLSTRIP;
-																			else
-																					case $SINO in
-																						[si]* ) sudo xfce4-terminal --geometry=193x40 -x bettercap -eval "set http.proxy.sslstrip true ; set net.sniff.verbose false; set arp.spoof.targets; set net.sniff.output /root/bettercap/PROXY-HTTP-SSLSTRIP.pcap; arp.spoof on; net.sniff on; http.proxy on; net.probe on" && MENU_PRINCIPAL; 
-																						;;
-																						[no]* ) sudo xfce4-terminal --geometry=193x40 -x bettercap -eval "set http.proxy.sslstrip true ; set net.sniff.verbose false; set arp.spoof.targets; arp.spoof on; net.sniff on; http.proxy on; net.probe on" && MENU_PRINCIPAL
-																						;;
-																							* ) echo -e "\e[0;31m[[[[POR FAVOR SOLO PONGA (s|n)]]]]";HTTP_PROXY 
-																						;;
-																					esac
-																			
-																		fi	
-																
-																done
-														;;
-														[no]* ) while true; do
-																		echo -n -e "\e[0;32m [[[*]]] \e[0;31mDesea guarda los paquetes capturados en un archivo (si/no): "; tput sgr0
-																		read SINO 
-																		if [ -z "$SINO" ]; then
-																				echo -e "\e[0;31m [[[[OPCION VACIA, VUELVA A INTENTARLO]]]]"; echo; SSLSTRIP;
-																			else
-																					case $SINO in
-																						[si]* ) sudo xfce4-terminal --geometry=193x40 -x bettercap -eval "set net.sniff.verbose false; set arp.spoof.targets; set net.sniff.output /root/bettercap/PROXY-HTTP-SSLSTRIP.pcap; arp.spoof on; net.sniff on; http.proxy on; net.probe on" && MENU_PRINCIPAL; 
-																						;;
-																						[no]* ) sudo xfce4-terminal --geometry=193x40 -x bettercap -eval "set net.sniff.verbose false; set arp.spoof.targets; arp.spoof on; net.sniff on; http.proxy on; net.probe on" && MENU_PRINCIPAL
-																						;;
-																							* ) echo -e "\e[0;31m[[[[POR FAVOR SOLO PONGA (s|n)]]]]";HTTP_PROXY 
-																						;;
-																					esac
-																		fi
-																done
-														;;
-														    * ) echo -e "\e[0;31m[[[[POR FAVOR SOLO PONGA (s|n)]]]]";HTTP_PROXY
-														;;
-												esac
-									fi	
-									 
-									done
-						else
-							mkdir ~/bettercap ; HTTP_PROXY
-					fi
-						
-				}
 
 
-			SNIFFALL() { echo;
-	if [ -d ~/bettercap ]; then
-					
+
+
+
+
+
+
+SNIFFALL() { 				
+sleep 2 &
+PID=$!
+i=1
+sp="/-\|"
+echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Buscando interfaces disponibles.. \e[0m" $(echo -e "\e[0;31m  "  )
+while [ -d /proc/$PID ]
+		do
+			sleep 0.1
+			printf "\b${sp:i++%${#sp}:1}"
+done
+						    echo; echo -e "\e[0;33m ";  iwconfig 2>&1 | grep 802.11 | awk '{print "* " $1}'
+							echo; echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Escriba la interfaz a utilizar :> \e[0m"; tput sgr0
+							read INTERFACE
+							INTERFACES=`airmon-ng|grep ''"$INTERFACE"|cut -f2`
+								while [ -z "$INTERFACE" -o "$INTERFACES" != "$INTERFACE" ]; do
+									echo -e "\e[0;34m[[[\e[0;31m>>\e[0;34m]]]\e[0;37m Usted ha dejado el campo vacio, o la interfaz no esta disponible..\e[0m";
+									echo; echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Escriba la interfaz a utilizar :> \e[0m"; tput sgr0
+									read INTERFACE
+									INTERFACES=`airmon-ng|grep ''"$INTERFACE"|cut -f2`
+								done
+								
+								
 					while true; do
-							echo -e "\e[0;32m [[[\e[1;31m1\e[0;32m]]] \e[0;37mSniffeando toda la red.\e[0m"
-							echo -n -e "\e[0;32m [[[*]]] \e[1;31mDesea guarda los paquetes capturados en un archivo (si/no) :\e[0m"; tput sgr0
+							echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Desea guarda los paquetes capturados en un archivo (si/no) :> \e[0m"; tput sgr0
 							read SINO
-						case $SINO in
-								[s]* ) sudo xfce4-terminal --geometry=193x40 -x bettercap -eval "net.probe on; set arp.spoof.targets; arp.spoof on; set net.sniff.output /root/bettercap/captura_de_toda_la_red.pcap; set net.sniff.verbose false; net.sniff on " && SNIFF
+									while [[ -z "$SINO" ]]; do
+											echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Usted ha dejado el campo vacio.\e[0m";
+											echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Desea guarda los paquetes capturados en un archivo (si/no) :> \e[0m"; tput sgr0
+											read SINO
+									done
+
+						 case $SINO in
+								[s]* ) echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Ruta donde guardar la captura :> \e[0m"; tput sgr0
+										read SALIDA_FAST_BETTERCAP
+											while [[ -z "$SALIDA_FAST_BETTERCAP"  ]] || [[ ! -d "$SALIDA_FAST_BETTERCAP" ]]; do 
+												echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Usted ha dejado el campo vacio, o el directorio no existe..\e[0m" 
+												echo;echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Ruta donde guardar la captura :> \e[0m"; tput sgr0
+												read SALIDA_FAST_BETTERCAP
+											done
+									gnome-terminal -t sniff_all --geometry=190x40 --zoom=0.7 -- bettercap -iface wlan0 -eval "net.probe on; set arp.spoof.targets; arp.spoof on; set net.sniff.output $SALIDA_FAST_BETTERCAP/sniff_all.pcap; set net.sniff.verbose false; net.sniff on" &&
+										
+										sleep 1 ;echo;echo -e "\e[0;30m\e[42m[[[ Fast_Bettercap V0.2 ]]]\e[0m";echo;
+										echo -e "\e[0;34m[[[\e[1;32m0\e[0;34m]]]\e[0;37m Menu principal\e[0m"
+										echo -e "\e[0;34m[[[\e[1;32m99\e[0;34m]]]\e[0;37m Cerrar script\e[0m"; sleep 0.5
+								while true;do
+										echo; echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Elija una opcion :> \e[0m"; tput sgr0
+										read OPCION
+										case $OPCION in
+											0)  MENU_PRINCIPAL
+											;;
+											99) exit
+											;;
+											*) echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Opcion incorrecta..\e[0m"
+											;;
+										esac 
+								 done 
 									;;
-								[n]* ) sudo xfce4-terminal --geometry=193x40 -x bettercap -eval "net.probe on; set arp.spoof.targets; arp.spoof on; set net.sniff.verbose false; net.sniff on " && SNIFF
+								[n]* ) xfce4-terminal --geometry=193x40 -x bettercap -iface $INTERFACE -eval "net.probe on; set arp.spoof.targets; arp.spoof on; set net.sniff.verbose false; net.sniff on " && break
 									;;	
-									* ) echo -e "\e[0;31m[[[[POR FAVOR SOLO PONGA (s|n)]]]]";SNIFFALL;
-						esac
+									* ) echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Solo escriba si/s/ no/n\e[0m";
+									;;
+						 esac
 
 					done
-			else
-			mkdir ~/bettercap 1> /dev/null; SNIFFALL;
-	fi			
 						}
-						
-CONTINUA() {
-	while true; do
-								echo -n -e "\e[0;32m [[[*]]] \e[1;31m Desea guarda los paquetes capturados en un archivo (si/no) : \e[0m";  tput sgr0
-										read SINO
-									if [ -z "$SINO" ]; then
-													echo -e "\e[0;31m [[[[OPCION VACIA, VUELVA A INTENTARLO]]]]"; echo; CONTINUA;
-												else
-											case $SINO in
-												[s]* ) sudo xfce4-terminal --geometry=193x40 -x bettercap -eval "net.probe on; set arp.spoof.targets $HOSTIP ; arp.spoof on; set net.sniff.output /root/bettercap/$HOSTIP.pcap; set net.sniff.verbose false; net.sniff on" && SNIFF
-												;;
-												[n]* ) sudo xfce4-terminal --geometry=193x40 -x bettercap -eval "net.probe on; set arp.spoof.targets $HOSTIP ; arp.spoof on; set net.sniff.verbose false; net.sniff on" && SNIFF
-												;;
-												   * ) echo -e "\e[0;31m[[[[POR FAVOR SOLO PONGA (s|n)]]]]"; echo; CONTINUA
-											esac
-									fi
-	done
+
+
+
+MENU_PRINCIPAL() { echo;BANNER;
+echo -e "\e[0;34m[[[\e[1;32m0.\e[0;34m]]]\e[0;37m Sniff all (sniffear toda la red ) \e[0m"
+echo -e "\e[0;34m[[[\e[1;32m1.\e[0;34m]]]\e[0;37m Network devices (Dispositivos en la red )\e[0m"
+echo -e "\e[0;34m[[[\e[1;32m2.\e[0;34m]]]\e[0;37m En desarrollo (XXXXXX)\e[0m"
+echo -e "\e[0;34m[[[\e[1;32m3.\e[0;34m]]]\e[0;37m En desarrollo (XXXXXX)\e[0m"
+echo -e "\e[0;34m[[[\e[1;32m4.\e[0;34m]]]\e[0;37m En desarrollo (XXXXXX)\e[0m";echo;
+echo -e "\e[0;34m[[[\e[1;31m99.\e[0;34m]]]\e[0;37m Salir\e[0m";echo;
+echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Elija una opcion :> \e[0m"; tput sgr0
+read MENUOPCION
+while [[ -z "$MENUOPCION" || "$MENUOPCION" != @(0|1|2|3|4|99|) ]]; do
+		echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m El campo esta vacio, o la \"opcion\" no corresponde al menu.\e[0m";echo
+		echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Elija una opcion :> \e[0m"; tput sgr0
+		read MENUOPCION
+done
+		while true;do
+				case $MENUOPCION in
+					0) SNIFFALL 
+					;;
+					1) HOST_UP
+					;;
+					2) echo "en desarrollo 2";break
+					;;
+					3) echo "en desarrollo 3";break
+					;;
+					4) echo "en desarrollo 4";break
+					;;
+					99) break
+					;;
+				esac
+		done
 }
 
-	SNIFFTARGET() { if [ -d ~/bettercap ]; then
-							echo; echo -e "\e[0;32m [[[\e[1;31m2\e[0;32m]]] \e[0;37m Sniffeando host especifico.\e[0m"
-							echo -n -e "\e[0;32m [[[*]]] \e[1;31m Cual es la host que desea sniffear: \e[0m"; tput sgr0
-							read HOSTIP
-								if [ -z "$HOSTIP" ]; then
-										echo; echo -e "\e[0;31m [[[[OPCION VACIA, VUELVA A INTENTARLO]]]]"; sleep 2 ; SNIFFTARGET; 
-									else
-										CONTINUA
-								fi
-						else
-							mkdir ~/bettercap ; SNIFFTARGET;
-					fi
-	}
-				
 
-			SNIFFTARGETS() { if [ -d ~/bettercap ]; then 
-								echo; echo -e "\e[0;32m [[[\e[1;31m3\e[0;32m]]] \e[0;37m Sniffeando varios targets especificos.\e[0m"
-								echo -n -e "\e[0;32m [[[*]]] \e[1;31m Cuales son las IP a sniffear: \e[0m"; tput sgr0
-								read HOSTIP
-									if [ -z "$HOSTIP" ]; then
-											echo; echo -e "\e[0;31m[[[[OPCION VACIA, VUELVA A INTENTARLO]]]]"; sleep 2 ; SNIFFTARGETS;
-										else
-											CONTINUA
-									fi
-								else
-									mkdir ~/bettercap ; SNIFFTARGETS
-							fi
-				}
-
-
-
-HOSTUP() { clear; BANNER; echo;
-					sudo xfce4-terminal --geometry=156x32 -x bettercap -eval "net.probe on; ticker on "
-	MENU_PRINCIPAL;
-	
-	}
-
-
-
-			SNIFF() { clear; BANNER; echo;
-						echo -e "\e[1;31m  1) \e[0;37m Sniffear toda la red\e[0m"
-						echo -e "\e[1;31m  2) \e[0;37m Sniffear un target especifico\e[0m"
-						echo -e "\e[1;31m  3) \e[0;37m Sniffear varios targets\e[0m"
-						#echo -e "\e[1;31m 4) \e[0;37m Proxy http transparente\e[0m"
-						echo -e "\e[1;31m  4) \e[0;37m Menu principal\e[0m"
-						echo;
-						echo -e "\e[1;37m 99) \e[0;31m Salir\e[0m"
-						echo;
-						echo -n -e "\e[0;32m\e[4m[[[*]]] sniff\e[0;31m > " ; tput sgr0
-						read OPCIONSNIFF
-							while :
-							do
-									if [ -z "$OPCIONSNIFF" ]; then
-												echo; echo -e "\e[0;31m[[[[OPCION VACIA, VUELVA A INTENTARLO]]]]"; sleep 2 ; clear; SNIFF;
-										else
-												case $OPCIONSNIFF in
-														1) SNIFFALL
-														;;
-														2) SNIFFTARGET
-														;;
-														3) SNIFFTARGETS
-						#								;;
-						#								4) HTTP_PROXY
-														;;
-														4) MENU_PRINCIPAL
-														;;
-														99) SALIR
-														;;
-														*) ERROR1
-														;;
-												esac
-									fi
-							done
-					}
-
-MENU_PRINCIPAL() { clear;
-BANNER;
-echo;
-echo -e "\e[1;31m  1) \e[0;37m Sniff\e[0m"
-echo;
-echo -e "\e[1;31m  2) \e[0;37m Proxy HTTP transparente\e[0m"
-echo; 
-echo -e "\e[1;31m  3) \e[0;37m Dns spoof\e[0m"
-echo
-echo -e "\e[1;31m  4) \e[0;37m Host en red\e[0m"
-echo;
-echo -e "\e[1;31m  5) \e[0;37m Banear target/s\e[0m"
-echo;
-echo -e "\e[1;37m 99) \e[0;31m Salir\e[0m"
-echo 
-echo -n -e "\e[0;32m\e[4m[[[*]]] fast bettercap\e[0;31m > " ; tput sgr0
-read OPCIONMENU
-while :
-do
-	 if [ -z "$OPCIONMENU" ]; then
-			echo; echo -e "\e[0;31m[[[[OPCION VACIA, VUELVA A INTENTARLO]]]]"; sleep 2 ; clear; MENU_PRINCIPAL;
-		else
-			case $OPCIONMENU in
-					1) SNIFF
-					;;
-					2) HTTP_PROXY
-					;;
-					3) DNSSPOOF
-					;;
-					4) HOSTUP
-					;;
-					5) BAN_TARGETS
-					;;
-					99) SALIR
-					;;
-					*) ERROR
-					;;
-			esac 
-	fi
-done	
-}
-
-MENU_PRINCIPAL
+if [ "$EUID" -ne 0 ]; then
+		 echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m  Por favor corra el script con privilegios root.\e[0m"
+  			exit
+  	else
+  		 MENU_PRINCIPAL
+fi
