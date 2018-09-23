@@ -90,7 +90,27 @@ done
 }
  
 HOSTUPNETDISCOVER() {
-	echo -e "\e[0;32m " | gnome-terminal -t Netdiscover Network Devices --geometry=100x30 --zoom=1 -- netdiscover  && clear; MENU_PRINCIPAL;
+		sleep 2 &
+PID=$!
+i=1
+sp="/-\|"
+echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Buscando interfaces disponibles.. \e[0m" $(echo -e "\e[0;31m  "  )
+while [ -d /proc/$PID ]
+		do
+			sleep 0.1
+			printf "\b${sp:i++%${#sp}:1}"
+done
+	echo; echo -e "\e[0;33m ";  iwconfig 2>&1 | grep 802.11 | awk '{print "* "$1," <-------->  "$4,$5,$6,$7}'
+	echo; echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Escriba la interfaz a utilizar :> \e[0m"; tput sgr0
+	read INTERFACE
+	INTERFACES=`airmon-ng|grep ''"$INTERFACE"|cut -f2`
+	while [ -z "$INTERFACE" -o "$INTERFACES" != "$INTERFACE" ]; do
+		echo -e "\e[0;34m[[[\e[0;31m>>\e[0;34m]]]\e[0;37m Usted ha dejado el campo vacio, o la interfaz no esta disponible..\e[0m";
+		echo; echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Escriba la interfaz a utilizar :> \e[0m"; tput sgr0
+		read INTERFACE
+		INTERFACES=`airmon-ng|grep ''"$INTERFACE"|cut -f2`
+	done
+	echo -e "\e[0;32m " | gnome-terminal -t Netdiscover Network Devices --geometry=100x30 --zoom=1 -- netdiscover -i $INTERFACE && clear; MENU_PRINCIPAL;
 }
 
 HOST_UP() {
