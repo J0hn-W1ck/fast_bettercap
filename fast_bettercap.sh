@@ -225,3 +225,4 @@ if [ "$EUID" -ne 0 ]; then
   	else
   		DEPENDENCIAS
 fi
+
