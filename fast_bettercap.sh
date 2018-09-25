@@ -1,7 +1,7 @@
 #!/bin/bash
 #Fast_Bettercap es un script en bash que busca simplificar el uso del nuevo bettercap para aquellas personas que no saben como utilizarla.
 #No busco robarme el crédito de esta maravillosa herramienta llamada BETTERCAP, simplemente facilitar su uso.
-#Esta es la version 0.3 y estoy re diseñando las funciones y menú de selección para hacerlo mas completo.
+#Esta es la version 0.2 y estoy re diseñando las funciones y menú de selección para hacerlo mas completo.
 #No soy un programador, ni me considero un hacker, solo soy un entusiasta de informatica.
 #Por si quieren contactarme: hablemosdehacking@gmail.com
 #Acepto sugerencias y criticas.
@@ -242,7 +242,7 @@ while true; do
 					SSLSTRIPONOFF
 
 							case $SSLTRIPOPCION in
-									[s]*) echo "guardando la salida y con sslstrip" && clear;MENU_PRINCIPAL;
+									[s]*) gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- sudo bettercap -iface $INTERFACE -eval "set arp.spoof.targets; set net.sniff.output $HTTPPROXYOPCION/http_sslstrip.pcap; set net.sniff.verbose false; set http.proxy.sslstrip true" -autostart "arp.spoof, events.stream, http.proxy, net.recon, net.sniff,"  && clear;MENU_PRINCIPAL;
 									;;
 									[n]*) echo "guardando la salida pero sin sslstrip" && clear;MENU_PRINCIPAL;
 									;;
