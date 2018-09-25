@@ -208,6 +208,69 @@ done
 done
 }
 
+SSLSTRIPONOFF() {
+	echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Desea utilizar sslstrip (si/no):> \e[0m"; tput sgr0
+	read SSLTRIPOPCION
+		while [[ -z "$SSLTRIPOPCION"  ]]; do 
+				echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;31m Usted ha dejado el campo vacio...\e[0m" 
+				echo;echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Desea utilizar sslstrip (si/no):> \e[0m"; tput sgr0
+				read SSLTRIPOPCION
+		done
+}
+
+
+HTTPPROXY() {
+SET_TARGET;
+while true; do
+		echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Desea guarda los paquetes capturados en un archivo (si/no):> \e[0m"; tput sgr0
+		read SINO
+	while [[ -z "$SINO" ]]; do
+		echo -e "\e[0;34m[[[\e[0;31m>>\e[0;34m]]]\e[0;31m Usted ha dejado el campo vacio.\e[0m";
+		echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Desea guarda los paquetes capturados en un archivo (si/no):> \e[0m"; tput sgr0
+		read SINO
+	done
+
+	 case $SINO in
+			[s]* ) echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Ruta donde guardar la captura:> \e[0m"; tput sgr0
+	 				read HTTPPROXYOPCION
+					while [[ -z "$HTTPPROXYOPCION"  ]] || [[ ! -d "$HTTPPROXYOPCION" ]]; do 
+							echo -e "\e[0;34m[[[\e[0;31m>>\e[0;34m]]]\e[0;31m Usted ha dejado el campo vacio, o el directorio no existe..\e[0m" 
+							echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Ruta donde guardar la captura :> \e[0m"; tput sgr0
+							read HTTPPROXYOPCION
+					done
+
+					SSLSTRIPONOFF
+
+							case $SSLTRIPOPCION in
+									[s]*) echo "guardando la salida y con sslstrip" && clear;MENU_PRINCIPAL;
+									;;
+									[n]*) echo "guardando la salida pero sin sslstrip" && clear;MENU_PRINCIPAL;
+									;;
+								 	*) echo -e "\e[0;34m[[[\e[0;31m>>\e[0;34m]]]\e[0;31m Solo escriba si/s/ no/n\e[0m";SSLSTRIPONOFF;
+									;;
+							esac
+			;;
+		[n]* ) echo;echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Desea utilizar sslstrip (si/no):> \e[0m"; tput sgr0
+	 			read SSLTRIPOPCION
+					while [[ -z "$SSLTRIPOPCION"  ]]; do 
+							echo -e "\e[0;34m[[[\e[0;31m>>\e[0;34m]]]\e[0;31m Usted ha dejado el campo vacio...\e[0m" 
+							echo -n -e "\e[0;34m[[[\e[0;32m>>\e[0;34m]]]\e[0;37m Desea utilizar sslstrip (si/no):> \e[0m"; tput sgr0
+							read SSLTRIPOPCION
+					done
+							case $SSLTRIPOPCION in
+									[s]*) echo "sin guardar la salida,pero con sslstrip" && clear;MENU_PRINCIPAL;
+									;;
+									[n]*) echo "sin guardar la salida, y sin sslstrip" && clear;MENU_PRINCIPAL;
+									;;
+								 	*) echo -e "\e[0;34m[[[\e[0;31m>>\e[0;34m]]]\e[0;31m Solo escriba si/s/ no/n\e[0m";
+									;;
+							esac
+			;;	
+			* ) echo -e "\e[0;34m[[[\e[0;31m>>\e[0;34m]]]\e[0;31m Solo escriba si/s/ no/n\e[0m";
+			;;
+	esac
+done
+}
 
 SNIFF_MENU() {
 	echo;echo -e "\e[0;34m[[[\e[1;32m0. \e[0;34m]]]\e[0;37m Sniff all (sniffear toda la red ) \e[0m"
@@ -239,7 +302,7 @@ MENU_PRINCIPAL() { echo;BANNER;
 echo -e "\e[0;34m[[[\e[1;32m0. \e[0;34m]]]\e[0;37m Sniff (Snifear la red) \e[0m"
 echo -e "\e[0;34m[[[\e[1;32m1. \e[0;34m]]]\e[0;37m Network devices (Dispositivos en la red )\e[0m"
 echo -e "\e[0;34m[[[\e[1;32m2. \e[0;34m]]]\e[0;37m Ban target (Banear uno o mas objetivos)\e[0m"
-echo -e "\e[0;34m[[[\e[1;32m3. \e[0;34m]]]\e[0;37m En desarrollo (XXXXXX)\e[0m"
+echo -e "\e[0;34m[[[\e[1;32m3. \e[0;34m]]]\e[0;37m Transparent HTTP proxy (Analizar el tráfico HTTP)\e[0m"
 echo -e "\e[0;34m[[[\e[1;32m4. \e[0;34m]]]\e[0;37m En desarrollo (XXXXXX)\e[0m"
 echo -e "\e[0;34m[[[\e[1;31m99.\e[0;34m]]]\e[0;37m Salir\e[0m";echo;
 echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Fast_Bettercap:> \e[0m"; tput sgr0
@@ -257,7 +320,7 @@ done
 					;;
 					2) BAN_TARGET
 					;;
-					3) echo "en desarrollo 3";break
+					3) HTTPPROXY
 					;;
 					4) echo "en desarrollo 4";break
 					;;
