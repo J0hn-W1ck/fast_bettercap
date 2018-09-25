@@ -160,24 +160,8 @@ done
 							read SALIDA_FAST_BETTERCAP
 					done
 							gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- bettercap -iface $INTERFACE -eval "net.probe on; set arp.spoof.targets; arp.spoof on; set net.sniff.output $SALIDA_FAST_BETTERCAP/sniff_all.pcap; set net.sniff.verbose false; net.sniff on"&& clear; MENU_PRINCIPAL;
-							
-							sleep 1 ;echo;echo -e "\e[0;30m\e[42m[[[ Fast_Bettercap V0.2 ]]]\e[0m";echo;
-							echo -e "\e[0;34m[[[\e[1;32m0\e[0;34m]]]\e[0;37m Menu principal\e[0m"
-							echo -e "\e[0;34m[[[\e[1;32m99\e[0;34m]]]\e[0;37m Cerrar script\e[0m"; sleep 0.5
-while true;do
-	echo; echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Elija una opcion :> \e[0m"; tput sgr0
-	read OPCION
-		case $OPCION in
-			0)  MENU_PRINCIPAL
 			;;
-			99) exit
-			;;
-			*) echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Opcion incorrecta..\e[0m"
-			;;
-		esac 
-done 
-			;;
-		[n]* ) gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- bettercap -iface $INTERFACE -eval "net.probe on; set arp.spoof.targets; arp.spoof on; set net.sniff.verbose false; net.sniff on "&& clear; MENU_PRINCIPAL;
+			[n]* ) gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- bettercap -iface $INTERFACE -eval "net.probe on; set arp.spoof.targets; arp.spoof on; set net.sniff.verbose false; net.sniff on "&& clear; MENU_PRINCIPAL;
 			;;	
 			* ) echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Solo escriba si/s/ no/n\e[0m";
 			;;
@@ -214,22 +198,7 @@ done
 							read SNIFFTARGETOPCION
 					done
 							gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- bettercap -iface $INTERFACE -eval "net.probe on; set arp.spoof.targets $SNIFFTARGETOPCION; arp.spoof on; set net.sniff.output $SALIDA_FAST_BETTERCAP/sniff_all.pcap; set net.sniff.verbose false; net.sniff on"&& clear; MENU_PRINCIPAL;
-							
-							sleep 1 ;echo;echo -e "\e[0;30m\e[42m[[[ Fast_Bettercap V0.2 ]]]\e[0m";echo;
-							echo -e "\e[0;34m[[[\e[1;32m0\e[0;34m]]]\e[0;37m Menu principal\e[0m"
-							echo -e "\e[0;34m[[[\e[1;32m99\e[0;34m]]]\e[0;37m Cerrar script\e[0m"; sleep 0.5
-while true;do
-	echo; echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Elija una opcion :> \e[0m"; tput sgr0
-	read OPCION
-		case $OPCION in
-			0)  MENU_PRINCIPAL
-			;;
-			99) exit
-			;;
-			*) echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Opcion incorrecta..\e[0m"
-			;;
-		esac 
-done 
+
 			;;
 		[n]* ) gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- bettercap -iface $INTERFACE -eval "net.probe on; set arp.spoof.targets; arp.spoof on; set net.sniff.verbose false; net.sniff on "&& clear; MENU_PRINCIPAL;
 			;;	
@@ -237,8 +206,6 @@ done
 			;;
 	esac
 done
-
-
 }
 
 
