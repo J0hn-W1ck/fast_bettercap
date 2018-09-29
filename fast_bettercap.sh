@@ -26,7 +26,7 @@ echo -e '\e[1;33m                                ``.```  \e[0m';echo;
 }
 
 DEPENDENCIAS() {
-clear;echo;echo -e "\e[30;48;5;82m[[[ Fast_Bettercap V0.3 ]]]\e[0m";echo;sleep 0.5
+clear;echo;echo -e "\e[30;48;5;82m[[[ Fast_Bettercap V0.4 ]]]\e[0m";echo;sleep 0.5
 if [ -f /root/bettercap.history ]; then
 	sudo rm /root/bettercap.history 2> /dev/null
 fi
