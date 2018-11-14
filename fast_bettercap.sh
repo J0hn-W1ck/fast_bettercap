@@ -1,7 +1,7 @@
 #!/bin/bash
 #Fast_Bettercap es un script en bash que busca simplificar el uso del nuevo bettercap para aquellas personas que no saben como utilizarla.
 #No busco robarme el crédito de esta maravillosa herramienta llamada BETTERCAP, simplemente facilitar su uso.
-#Esta es la version 0.9 y estoy re diseñando las funciones y menú de selección para hacerlo mas completo.
+#Esta es la version 1.0.0 y estoy re diseñando las funciones y menú de selección para hacerlo mas completo.
 #No soy un programador, ni me considero un hacker, solo soy un entusiasta de informatica.
 #Por si quieren contactarme: hablemosdehacking@gmail.com
 #Acepto sugerencias y criticas.
@@ -12,7 +12,7 @@
 BANNER() {
 	clear;echo;
 echo -e '\e[1;33m   -::-.`                                                   `...`     \e[0m'
-echo -e '\e[1;33m  .shhhhhhyo/-`           \e[1;37mFast Bettercap V0.9\e[1;33m          .:+syhhhhhs.  \e[0m'
+echo -e '\e[1;33m  .shhhhhhyo/-`           \e[1;37mFast Bettercap V1.0.0\e[1;33m          .:+syhhhhhs.  \e[0m'
 echo -e '\e[1;33m `yhhhhhhhhhhhys+-`         \e[1;37m By:> John-Wick\e[1;33m        .:+syhhhhhhhhhhhs;\e[0m'
 echo -e '\e[1;33m :hhhhhhhhhhhhhhhhhyo/-.                     `.:+oyhhhhhhhhhdhhhhhhh- \e[0m'
 echo -e '\e[1;33m +hhhhhh\e[1;37mMMMMNN\e[1;33mmdhhhhhhhhyso+/:--.......-:/+oyyhhhhhhhhdm\e[1;37mNMMMMM\e[1;33mmhhhhh/ \e[0m'
@@ -26,7 +26,7 @@ echo -e '\e[1;33m                                ``.```  \e[0m';echo;
 }
 
 DEPENDENCIAS() {
-clear;echo;echo -e "\e[30;48;5;82m[[[ Fast_Bettercap V0.9 ]]]\e[0m";echo;sleep 0.2
+clear;echo;echo -e "\e[30;48;5;82m[[[ Fast_Bettercap V1.0.0 ]]]\e[0m";echo;sleep 0.2
 if [ -f /root/bettercap.history ]; then
 	sudo rm /root/bettercap.history 2> /dev/null
 fi
@@ -246,7 +246,7 @@ BAN_TARGET() {
 	echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Fast_Bettercap_Target_Ban:> \e[0m"; tput sgr0
 			   read TARGETS
 		done
-	gnome-terminal -t "Baneando a: -----> $TARGETS" --geometry=68x6 --zoom=1 -- sudo bettercap -iface $INTERFACE -eval 'arp.ban on; set arp.spoof.targets $TARGETS; set ticker.commands "clear; !echo "ARP en el modo de prohibición..""; set ticker.period 1' -autostart "ticker, arp.spoof" && clear;MENU_PRINCIPAL;
+	gnome-terminal -t "Baneando a: -----> $TARGETS" --geometry=68x6 --zoom=1 -- sudo bettercap -iface $INTERFACE -eval 'arp.ban on; set arp.spoof.targets $TARGETS; set ticker.commands "clear; !echo "ARP en modo prohibición..""; set ticker.period 1' -autostart ticker, arp.spoof && clear;MENU_PRINCIPAL;
 }
 
 SNIFFALL() { 				
