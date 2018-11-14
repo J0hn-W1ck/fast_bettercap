@@ -1,7 +1,7 @@
 #!/bin/bash
 #Fast_Bettercap es un script en bash que busca simplificar el uso del nuevo bettercap para aquellas personas que no saben como utilizarla.
 #No busco robarme el crédito de esta maravillosa herramienta llamada BETTERCAP, simplemente facilitar su uso.
-#Esta es la version 0.6 y estoy re diseñando las funciones y menú de selección para hacerlo mas completo.
+#Esta es la version 0.8 y estoy re diseñando las funciones y menú de selección para hacerlo mas completo.
 #No soy un programador, ni me considero un hacker, solo soy un entusiasta de informatica.
 #Por si quieren contactarme: hablemosdehacking@gmail.com
 #Acepto sugerencias y criticas.
