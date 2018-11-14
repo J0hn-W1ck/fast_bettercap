@@ -1,4 +1,4 @@
-# FAST_BETTERCAP 0.6
+# FAST_BETTERCAP 0.7
 Fast_Bettercap es un script en bash que contiene algunos ataques de Man-in-the-middle  (MITM) ya configurados para ejecutar sin necesidad de estar ejecutando comando tras comando en esta nueva versión de bettercap 2.6
 
 # En desarrollo
