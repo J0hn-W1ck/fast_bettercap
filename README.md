@@ -6,3 +6,4 @@ Fast_bettecap Version 1.0.3 es un script en constante desarrollo. Seguiré actua
 
 Saludos..
 
+<img src='http://subirimagen.me/uploads/20181127055451.png'  />
