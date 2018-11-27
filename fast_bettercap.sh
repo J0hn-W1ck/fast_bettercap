@@ -431,7 +431,7 @@ done
 																													
 
 if [ "$EUID" -ne 0 ]; then
-		clear;echo;echo -e "\e[30;48;5;82m[[[ Fast_Bettercap V0.2 ]]]\e[0m";echo;sleep 0.5
+		clear;echo;echo -e "\e[30;48;5;82m[[[ Fast_Bettercap V1.0.3 ]]]\e[0m";echo;sleep 0.5
 		echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m  Por favor corra el script con privilegios root.\e[0m"
 		echo
   		exit 0
