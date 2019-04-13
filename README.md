@@ -7,4 +7,6 @@ Fast_bettecap Version 1.0.4 es un script en constante desarrollo. Seguiré actua
 Saludos..
 
 <img src="https://i.ibb.co/gy5NYjB/2019-04-13-115139-1366x768-scrot.png" />
-<img src='https://subefotos.com/ver/?0e49b03995432e33ff06e9d06d3ae34bo.png'  />
+<img src='https://i.ibb.co/6H4KMHf/2019-04-13-115150-1366x768-scrot.png'  />
+<img src="https://i.ibb.co/fkBMxD5/2019-04-13-115213-1366x768-scrot.png" />
+<img src="https://i.ibb.co/CPhgXjF/2019-04-13-115228-1366x768-scrot.png " />
