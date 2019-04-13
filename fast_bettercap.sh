@@ -1,7 +1,7 @@
 #!/bin/bash
 #Fast_Bettercap es un script en bash que busca simplificar el uso del nuevo bettercap para aquellas personas que no saben como utilizarla.
 #No busco robarme el crédito de esta maravillosa herramienta llamada BETTERCAP, simplemente facilitar su uso.
-#Esta es la version 1.0.3 y estoy re diseñando las funciones y menú de selección para hacerlo mas completo.
+#Esta es la version 1.0.4 y estoy re diseñando las funciones y menú de selección para hacerlo mas completo.
 #No soy un programador, ni me considero un hacker, solo soy un entusiasta de informatica.
 #Por si quieren contactarme: hablemosdehacking@gmail.com
 #Acepto sugerencias y criticas.
@@ -12,7 +12,7 @@
 BANNER() {
 	clear;echo;
 echo -e '\e[1;33m   -::-.`                                                   `...`     \e[0m'
-echo -e '\e[1;33m  .shhhhhhyo/-`           \e[1;37mFast Bettercap V1.0.3\e[1;33m          .:+syhhhhhs.  \e[0m'
+echo -e '\e[1;33m  .shhhhhhyo/-`           \e[1;37mFast Bettercap V1.0.4\e[1;33m          .:+syhhhhhs.  \e[0m'
 echo -e '\e[1;33m `yhhhhhhhhhhhys+-`         \e[1;37m By:> John-Wick\e[1;33m        .:+syhhhhhhhhhhhs;\e[0m'
 echo -e '\e[1;33m :hhhhhhhhhhhhhhhhhyo/-.                     `.:+oyhhhhhhhhhdhhhhhhh- \e[0m'
 echo -e '\e[1;33m +hhhhhh\e[1;37mMMMMNN\e[1;33mmdhhhhhhhhyso+/:--.......-:/+oyyhhhhhhhhdm\e[1;37mNMMMMM\e[1;33mmhhhhh/ \e[0m'
@@ -26,7 +26,7 @@ echo -e '\e[1;33m                                ``.```  \e[0m';echo;
 }
 
 DEPENDENCIAS() {
-clear;echo;echo -e "\e[30;48;5;82m[[[ Fast_Bettercap V1.0.3 ]]]\e[0m";echo;sleep 0.2
+clear;echo;echo -e "\e[30;48;5;82m[[[ Fast_Bettercap V1.0.4 ]]]\e[0m";echo;sleep 0.2
 if [ -f /root/bettercap.history ]; then
 	sudo rm /root/bettercap.history 2> /dev/null
 fi
@@ -130,7 +130,7 @@ done
 
 HOSTUPBETTERCAP() {
 	SET_TARGET
-	gnome-terminal -t Bettercap Network Devices --geometry=170x35 --zoom=1 -- bettercap -iface $INTERFACE -eval "net.probe on; ticker on " && clear; MENU_PRINCIPAL;
+	gnome-terminal -t Bettercap Network Devices --geometry=170x35 --zoom=1 -- bettercap -iface $INTERFACE -eval 'net.probe on; set ticker.commands "clear; net.show; !ping -c 1 google.com >/dev/null 2>&1 && echo "Conectado" || echo "No conectado""; set ticker.period 3; ticker on; net.recon on ' && clear; MENU_PRINCIPAL;
 }
  
 HOSTUPNETDISCOVER() {
@@ -337,6 +337,19 @@ SET_TARGET;SAVECAPTURE;
 	esac
 }
 
+HTTP_SERVER () {
+
+	SET_TARGET;echo;
+	echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Escriba la carpeta del servidor:> \e[0m"; tput sgr0
+	read FILE
+	while [[ -z "$FILE"  ]] || [[ ! -d "$FILE" ]]; do
+		echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m El campo esta vacio, o la \"carpeta\" no existe.\e[0m";echo
+		echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Escriba la carpeta del servidor:> \e[0m"; tput sgr0
+		read FILE
+	done
+	gnome-terminal -t sniff_all --geometry=110x12 --zoom=1 -- sudo bettercap -iface $INTERFACE -eval "set http.server.path $FILE; http.server on"  && clear;MENU_PRINCIPAL;
+}
+
 DNSSPOOFMENU() {
 	clear;BANNER;
 	echo;echo -e "\e[0;34m[[[\e[1;32m0. \e[0;34m]]]\e[0;37m Bettercap\e[0m"
@@ -401,10 +414,11 @@ echo -e "\e[0;34m[[[\e[1;32m1. \e[0;34m]]]\e[0;37m Network devices (Dispositivos
 echo -e "\e[0;34m[[[\e[1;32m2. \e[0;34m]]]\e[0;37m Ban target (Banear uno o mas objetivos)\e[0m"
 echo -e "\e[0;34m[[[\e[1;32m3. \e[0;34m]]]\e[0;37m Transparent HTTP proxy (Analizar el tráfico HTTP)\e[0m"
 echo -e "\e[0;34m[[[\e[1;32m4. \e[0;34m]]]\e[0;37m DNS spoofing (Burlar al DNS)\e[0m"
+echo -e "\e[0;34m[[[\e[1;32m5. \e[0;34m]]]\e[0;37m Bettercap Http Server\e[0m"
 echo -e "\e[0;34m[[[\e[1;31m99.\e[0;34m]]]\e[0;37m Salir\e[0m";echo;
 echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Fast_Bettercap:> \e[0m"; tput sgr0
 read MENUOPCION
-while [[ -z "$MENUOPCION" || "$MENUOPCION" != @(0|1|2|3|4|99|) ]]; do
+while [[ -z "$MENUOPCION" || "$MENUOPCION" != @(0|1|2|3|4|5|99|) ]]; do
 		echo -e "\e[0;34m[[[\e[1;31m>>\e[0;34m]]]\e[0;37m El campo esta vacio, o la \"opcion\" no corresponde al menu.\e[0m";echo
 		echo -n -e "\e[0;34m[[[\e[1;32m>>\e[0;34m]]]\e[0;37m Elija una opcion :> \e[0m"; tput sgr0
 		read MENUOPCION
@@ -420,6 +434,8 @@ done
 					3) HTTPPROXY
 					;;
 					4) DNSSPOOFMENU
+					;;
+					5) HTTP_SERVER
 					;;
 					99) exit
 					;;
